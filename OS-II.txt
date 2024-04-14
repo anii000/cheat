@@ -1,0 +1,5745 @@
+Slip 1
+
+#include <stdio.h>
+
+#define MAX_RESOURCES 10
+#define MAX_PROCESSES 10
+
+int available[MAX_RESOURCES];
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int need[MAX_PROCESSES][MAX_RESOURCES];
+int num_processes;
+int num_resources;
+
+// Function prototypes
+void acceptAvailable();
+void acceptAllocationMax();
+void displayNeedMatrix();
+void displayAvailable();
+
+int main() {
+    int choice;
+    num_processes = 0;
+    num_resources = 0;
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+    printf("Enter the number of resources: ");
+    scanf("%d", &num_resources);
+
+    printf("Menu:\n");
+    printf("1. Accept Available\n");
+    printf("2. Display Allocation and Max\n");
+    printf("3. Display the contents of Need matrix\n");
+    printf("4. Display Available\n");
+    printf("5. Exit\n");
+
+    do {
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                acceptAvailable();
+                break;
+            case 2:
+                acceptAllocationMax();
+                break;
+            case 3:
+                displayNeedMatrix();
+                break;
+            case 4:
+                displayAvailable();
+                break;
+            case 5:
+                printf("Exiting...");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 5.\n");
+                break;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
+
+void acceptAvailable() {
+    printf("Enter the available resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &available[i]);
+    }
+}
+
+void acceptAllocationMax() {
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    printf("Enter the max matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &max[i][j]);
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+void displayNeedMatrix() {
+    printf("Need Matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void displayAvailable() {
+    printf("Available resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: %d\n", i + 1, available[i]);
+    }
+}
+
+-----------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to calculate total head movements
+int calculateTotalHeadMovements(int request[], int num_requests, int start_head) {
+    int total_head_movements = 0;
+    int current_head = start_head;
+
+    // Calculate head movements for each request
+    for (int i = 0; i < num_requests; i++) {
+        total_head_movements += abs(request[i] - current_head);
+        current_head = request[i];
+    }
+
+    return total_head_movements;
+}
+
+// Function to display the order of request served
+void displayRequestOrder(int request[], int num_requests) {
+    printf("Request Order Served: ");
+    for (int i = 0; i < num_requests; i++) {
+        printf("%d ", request[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int num_blocks;
+    int start_head;
+    int *request;
+    int total_head_movements;
+
+    // Accept input from the user
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &num_blocks);
+
+    printf("Enter the disk request string (comma-separated): ");
+    request = (int *)malloc(num_blocks * sizeof(int));
+    for (int i = 0; i < num_blocks; i++) {
+        scanf("%d", &request[i]);
+    }
+
+    printf("Enter the start head position: ");
+    scanf("%d", &start_head);
+
+    // Calculate total head movements
+    total_head_movements = calculateTotalHeadMovements(request, num_blocks, start_head);
+
+    // Display the order of request served
+    displayRequestOrder(request, num_blocks);
+
+    // Display the total number of head movements
+    printf("Total number of head movements: %d\n", total_head_movements);
+
+    // Free dynamically allocated memory
+    free(request);
+
+    return 0;
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Slip 2
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Node structure to represent a block
+typedef struct Block {
+    int block_number;
+    struct Block *next;
+} Block;
+
+// Function prototypes
+void initializeBitVector(int bit_vector[], int num_blocks);
+void showBitVector(int bit_vector[], int num_blocks);
+Block* createNewFile(Block *directory, int bit_vector[], int num_blocks);
+void showDirectory(Block *directory);
+void releaseMemory(Block *directory);
+
+int main() {
+    int num_blocks;
+    int bit_vector[MAX_BLOCKS] = {0}; // 0 represents free block, 1 represents allocated block
+    Block *directory = NULL;
+    int choice;
+
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    initializeBitVector(bit_vector, num_blocks);
+
+    srand(time(NULL)); // Seed for random number generation
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector(bit_vector, num_blocks);
+                break;
+            case 2:
+                directory = createNewFile(directory, bit_vector, num_blocks);
+                break;
+            case 3:
+                showDirectory(directory);
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    // Release allocated memory for directory
+    releaseMemory(directory);
+
+    return 0;
+}
+
+// Function to initialize the bit vector
+void initializeBitVector(int bit_vector[], int num_blocks) {
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    for (int i = 0; i < num_allocated_blocks; i++) {
+        int block_number = rand() % num_blocks; // Randomly choose block number
+        bit_vector[block_number] = 1; // Mark the block as allocated
+    }
+}
+
+// Function to show the bit vector
+void showBitVector(int bit_vector[], int num_blocks) {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", bit_vector[i]);
+    }
+    printf("\n");
+}
+
+// Function to create a new file and update the directory
+Block* createNewFile(Block *directory, int bit_vector[], int num_blocks) {
+    Block *new_file = (Block*)malloc(sizeof(Block));
+
+    // Find a free block for the new file
+    int block_number = -1;
+    for (int i = 0; i < num_blocks; i++) {
+        if (bit_vector[i] == 0) {
+            block_number = i;
+            bit_vector[i] = 1; // Mark the block as allocated
+            break;
+        }
+    }
+
+    if (block_number == -1) {
+        printf("No free blocks available to create a new file.\n");
+        free(new_file);
+        return directory;
+    }
+
+    new_file->block_number = block_number;
+    new_file->next = NULL;
+
+    // Update directory
+    if (directory == NULL) {
+        directory = new_file;
+    } else {
+        Block *temp = directory;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = new_file;
+    }
+
+    printf("New file created at block %d.\n", block_number);
+    return directory;
+}
+
+// Function to show the directory
+void showDirectory(Block *directory) {
+    if (directory == NULL) {
+        printf("Directory is empty.\n");
+        return;
+    }
+
+    printf("Directory (Block numbers of files):\n");
+    Block *temp = directory;
+    while (temp != NULL) {
+        printf("%d ", temp->block_number);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+// Function to release allocated memory for directory
+void releaseMemory(Block *directory) {
+    Block *temp;
+    while (directory != NULL) {
+        temp = directory;
+        directory = directory->next;
+        free(temp);
+    }
+}
+
+--------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_sum = 0;
+    int global_sum = 0;
+    int numbers[ARRAY_SIZE];
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 100; // Generating numbers between 0 and 99
+    }
+
+    // Calculate local sum
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        local_sum += numbers[i];
+    }
+
+    // Sum all local sums
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Print global sum by rank 0
+    if (rank == 0) {
+        printf("Global Sum: %d\n", global_sum);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+
+mpicc mpi_sum.c -o mpi_sum
+mpirun -np <num_processes> ./mpi_sum
+
+-----------------------------------------------------------------------------------------------------------------------------------
+Slip 3
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int need[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES];
+int num_processes, num_resources;
+
+// Function prototypes
+void calculateNeedMatrix();
+bool isSafeState(int safe_sequence[]);
+void displayNeedMatrix();
+
+int main() {
+    int safe_sequence[MAX_PROCESSES];
+
+    // Input number of processes and resources
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+    printf("Enter the number of resources: ");
+    scanf("%d", &num_resources);
+
+    // Input allocation matrix
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Input maximum matrix
+    printf("Enter the maximum matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Input available resources
+    printf("Enter the available resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &available[i]);
+    }
+
+    // Calculate and display the need matrix
+    calculateNeedMatrix();
+    printf("Need Matrix:\n");
+    displayNeedMatrix();
+
+    // Check if the system is in a safe state and display safe sequence if so
+    if (isSafeState(safe_sequence)) {
+        printf("System is in a safe state.\n");
+        printf("Safe Sequence: ");
+        for (int i = 0; i < num_processes; i++) {
+            printf("P%d ", safe_sequence[i]);
+        }
+        printf("\n");
+    } else {
+        printf("System is not in a safe state.\n");
+    }
+
+    return 0;
+}
+
+// Function to calculate the need matrix
+void calculateNeedMatrix() {
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < num_resources; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+// Function to display the need matrix
+void displayNeedMatrix() {
+    for (int i = 0; i < num_processes; i++) {
+        printf("P%d: ", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Function to check if the system is in a safe state
+bool isSafeState(int safe_sequence[]) {
+    bool finish[MAX_PROCESSES] = {false};
+    int work[MAX_RESOURCES];
+    for (int i = 0; i < num_resources; i++) {
+        work[i] = available[i];
+    }
+
+    int count = 0;
+    while (count < num_processes) {
+        bool found = false;
+        for (int i = 0; i < num_processes; i++) {
+            if (!finish[i]) {
+                bool can_execute = true;
+                for (int j = 0; j < num_resources; j++) {
+                    if (need[i][j] > work[j]) {
+                        can_execute = false;
+                        break;
+                    }
+                }
+                if (can_execute) {
+                    for (int j = 0; j < num_resources; j++) {
+                        work[j] += allocation[i][j];
+                    }
+                    safe_sequence[count] = i + 1;
+                    finish[i] = true;
+                    count++;
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            return false; // System is in an unsafe state
+        }
+    }
+    return true; // System is in a safe state
+}
+-------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_sum = 0;
+    int global_sum = 0;
+    double local_avg = 0.0;
+    double global_avg = 0.0;
+    int numbers[ARRAY_SIZE];
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 100; // Generating numbers between 0 and 99
+    }
+
+    // Calculate local sum
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        local_sum += numbers[i];
+    }
+
+    // Sum all local sums
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Calculate local average
+    local_avg = (double)local_sum / ARRAY_SIZE;
+
+    // Sum all local averages
+    MPI_Reduce(&local_avg, &global_avg, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Print global sum and average by rank 0
+    if (rank == 0) {
+        global_avg /= size; // Calculate average from sum of averages
+        printf("Global Sum: %d\n", global_sum);
+        printf("Global Average: %.2f\n", global_avg);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+mpicc mpi_sum_avg.c -o mpi_sum_avg
+mpirun -np <num_processes> ./mpi_sum_avg
+-------------------------------------------------------------------------------------------------------------------
+Slip 4
+#include <stdio.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 3
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int need[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES] = {7, 2, 6}; // Available instances of resources A, B, and C respectively
+int num_processes;
+
+// Function prototypes
+void acceptAllocationMax();
+void calculateNeed();
+void displayNeed();
+void displayAvailable();
+
+int main() {
+    int choice;
+
+    // Input number of processes
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+
+    printf("Menu:\n");
+    printf("a) Accept Allocation and Max\n");
+    printf("b) Display Allocation and Max\n");
+    printf("c) Find Need and Display It\n");
+    printf("d) Display Available\n");
+    printf("e) Exit\n");
+
+    do {
+        printf("\nEnter your choice: ");
+        scanf(" %c", &choice);
+
+        switch (choice) {
+            case 'a':
+                acceptAllocationMax();
+                break;
+            case 'b':
+                printf("Allocation Matrix:\n");
+                for (int i = 0; i < num_processes; i++) {
+                    printf("Process %d: ", i + 1);
+                    for (int j = 0; j < MAX_RESOURCES; j++) {
+                        printf("%d ", allocation[i][j]);
+                    }
+                    printf("\n");
+                }
+                printf("\nMax Matrix:\n");
+                for (int i = 0; i < num_processes; i++) {
+                    printf("Process %d: ", i + 1);
+                    for (int j = 0; j < MAX_RESOURCES; j++) {
+                        printf("%d ", max[i][j]);
+                    }
+                    printf("\n");
+                }
+                break;
+            case 'c':
+                calculateNeed();
+                displayNeed();
+                break;
+            case 'd':
+                displayAvailable();
+                break;
+            case 'e':
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
+                break;
+        }
+    } while (choice != 'e');
+
+    return 0;
+}
+
+// Function to accept allocation and max matrices from the user
+void acceptAllocationMax() {
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            printf("Resource %c: ", 'A' + j);
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    printf("Enter the max matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            printf("Resource %c: ", 'A' + j);
+            scanf("%d", &max[i][j]);
+        }
+    }
+}
+
+// Function to calculate the need matrix
+void calculateNeed() {
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+// Function to display the need matrix
+void displayNeed() {
+    printf("Need Matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i + 1);
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Function to display the available resources
+void displayAvailable() {
+    printf("Available Resources:\n");
+    for (int i = 0; i < MAX_RESOURCES; i++) {
+        printf("Resource %c: %d\n", 'A' + i, available[i]);
+    }
+}
+--------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int compare(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Sort the request array
+    qsort(requests, n, sizeof(int), compare);
+
+    // Find the index of the head position in the sorted array
+    int head_index = 0;
+    while (head_index < n && requests[head_index] < head) {
+        head_index++;
+    }
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head_index; i >= 0; i--) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+        printf("0 "); // End at the leftmost track
+        total_head_movements += head; // Move head to the end
+        for (int i = head_index + 1; i < n; i++) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+    } else {
+        // Moving right
+        for (int i = head_index; i < n; i++) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+        printf("%d ", max_pos); // End at the rightmost track
+        total_head_movements += (max_pos - head); // Move head to the end
+        for (int i = head_index - 1; i >= 0; i--) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+---------------------------------------------------------------------------------------------------------------------------
+Slip 5
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int need[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES];
+int num_processes, num_resources;
+
+// Function prototypes
+void acceptResourceInstances();
+void acceptAllocationMax();
+void calculateNeedMatrix();
+void displayNeedMatrix();
+bool canGrantRequest(int process_id, int request[]);
+
+int main() {
+    int request[MAX_RESOURCES];
+
+    // Input number of resource types
+    printf("Enter the number of resource types: ");
+    scanf("%d", &num_resources);
+
+    // Input number of instances for each resource type
+    acceptResourceInstances();
+
+    // Input number of processes
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+
+    // Input allocation and maximum matrices for each process
+    acceptAllocationMax();
+
+    // Calculate and display the need matrix
+    calculateNeedMatrix();
+    printf("Need Matrix:\n");
+    displayNeedMatrix();
+
+    // Input request for a process
+    int process_id;
+    printf("Enter the process id for which you want to request resources: ");
+    scanf("%d", &process_id);
+    printf("Enter the request for process %d:\n", process_id);
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &request[i]);
+    }
+
+    // Check if the request can be granted immediately
+    if (canGrantRequest(process_id - 1, request)) {
+        printf("The request can be granted immediately.\n");
+    } else {
+        printf("The request cannot be granted immediately.\n");
+    }
+
+    return 0;
+}
+
+// Function to accept number of instances for each resource type
+void acceptResourceInstances() {
+    printf("Enter the number of instances for each resource type:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &available[i]);
+    }
+}
+
+// Function to accept allocation and max matrices for each process
+void acceptAllocationMax() {
+    printf("Enter the allocation and max matrices for each process:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Allocation for Resource %d: ", j + 1);
+            scanf("%d", &allocation[i][j]);
+        }
+        for (int j = 0; j < num_resources; j++) {
+            printf("Max for Resource %d: ", j + 1);
+            scanf("%d", &max[i][j]);
+        }
+    }
+}
+
+// Function to calculate the need matrix
+void calculateNeedMatrix() {
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < num_resources; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+// Function to display the need matrix
+void displayNeedMatrix() {
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Function to check if a given request can be granted immediately
+bool canGrantRequest(int process_id, int request[]) {
+    for (int i = 0; i < num_resources; i++) {
+        if (request[i] > need[process_id][i] || request[i] > available[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_max = 0;
+    int global_max = 0;
+    int numbers[ARRAY_SIZE];
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+    }
+
+    // Calculate local maximum
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        if (numbers[i] > local_max) {
+            local_max = numbers[i];
+        }
+    }
+
+    // Find global maximum using MPI_Reduce
+    MPI_Reduce(&local_max, &global_max, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
+
+    // Print global maximum by rank 0
+    if (rank == 0) {
+        printf("Global Max: %d\n", global_max);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+--------------------------------------------------------------------------------------------------------------------------------------------
+Slip 6
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Node structure to represent a block
+typedef struct Block {
+    int block_number;
+    struct Block *next;
+} Block;
+
+// Global variables
+int bit_vector[MAX_BLOCKS] = {0}; // 0 represents free block, 1 represents allocated block
+Block *directory = NULL;
+int num_blocks;
+
+// Function prototypes
+void initializeBitVector();
+void showBitVector();
+Block* createNewFile(int block_number);
+void showDirectory();
+void releaseMemory();
+
+int main() {
+    int choice;
+    
+    // Seed for random number generation
+    srand(time(NULL));
+
+    // Input number of blocks in the disk
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    // Initialize bit vector
+    initializeBitVector();
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector();
+                break;
+            case 2: {
+                int block_number;
+                printf("Enter the block number for the new file: ");
+                scanf("%d", &block_number);
+                directory = createNewFile(block_number);
+                break;
+            }
+            case 3:
+                showDirectory();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    // Release allocated memory for directory
+    releaseMemory();
+
+    return 0;
+}
+
+// Function to initialize the bit vector
+void initializeBitVector() {
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    for (int i = 0; i < num_allocated_blocks; i++) {
+        int block_number = rand() % num_blocks; // Randomly choose block number
+        bit_vector[block_number] = 1; // Mark the block as allocated
+    }
+}
+
+// Function to display the bit vector
+void showBitVector() {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", bit_vector[i]);
+    }
+    printf("\n");
+}
+
+// Function to create a new file and update the directory
+Block* createNewFile(int block_number) {
+    if (bit_vector[block_number] == 1) {
+        printf("Block %d is already allocated. Cannot create new file.\n", block_number);
+        return directory;
+    }
+
+    Block *new_file = (Block*)malloc(sizeof(Block));
+    if (new_file == NULL) {
+        printf("Memory allocation failed. Cannot create new file.\n");
+        return directory;
+    }
+
+    new_file->block_number = block_number;
+    new_file->next = NULL;
+
+    // Update bit vector
+    bit_vector[block_number] = 1;
+
+    // Update directory
+    if (directory == NULL) {
+        directory = new_file;
+    } else {
+        Block *temp = directory;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = new_file;
+    }
+
+    printf("New file created at block %d.\n", block_number);
+    return directory;
+}
+
+// Function to display the directory
+void showDirectory() {
+    if (directory == NULL) {
+        printf("Directory is empty.\n");
+        return;
+    }
+
+    printf("Directory (Block numbers of files):\n");
+    Block *temp = directory;
+    while (temp != NULL) {
+        printf("%d ", temp->block_number);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+// Function to release allocated memory for directory
+void releaseMemory() {
+    Block *temp;
+    while (directory != NULL) {
+        temp = directory;
+        directory = directory->next;
+        free(temp);
+    }
+}
+----------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int compare(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void c_scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Sort the request array
+    qsort(requests, n, sizeof(int), compare);
+
+    // Find the index of the head position in the sorted array
+    int head_index = 0;
+    while (head_index < n && requests[head_index] < head) {
+        head_index++;
+    }
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        if (head_index < n) {
+            for (int i = head_index; i < n; i++) {
+                printf("%d ", requests[i]);
+                total_head_movements += abs_diff(head, requests[i]);
+                head = requests[i];
+            }
+        }
+        printf("%d ", max_pos); // Move to the end
+        total_head_movements += (max_pos - head);
+        head = min_pos; // Move to the beginning
+        for (int i = 0; i < head_index; i++) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+    } else {
+        // Moving right
+        if (head_index >= 0) {
+            for (int i = head_index; i >= 0; i--) {
+                printf("%d ", requests[i]);
+                total_head_movements += abs_diff(head, requests[i]);
+                head = requests[i];
+            }
+        }
+        printf("%d ", min_pos); // Move to the beginning
+        total_head_movements += head; // Move to the beginning
+        head = max_pos; // Move to the end
+        for (int i = n - 1; i > head_index; i--) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    c_scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+---------------------------------------------------------------------------------------------------------------------------------
+Slip 6
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES];
+int num_processes, num_resources;
+
+// Function prototypes
+bool isSafeState(int request[], int process_id);
+void allocateResources(int request[], int process_id);
+void releaseResources(int request[], int process_id);
+
+int main() {
+    int request[MAX_RESOURCES];
+    int process_id;
+
+    // Input number of processes and resources
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+    printf("Enter the number of resources: ");
+    scanf("%d", &num_resources);
+
+    // Input allocation matrix
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Input max matrix
+    printf("Enter the max matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Input available resources
+    printf("Enter the available resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &available[i]);
+    }
+
+    // Input process id and request
+    printf("Enter the process id: ");
+    scanf("%d", &process_id);
+    printf("Enter the resource request for process %d:\n", process_id);
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &request[i]);
+    }
+
+    // Check if the current system is in a safe state after the request
+    if (isSafeState(request, process_id - 1)) {
+        printf("The system is in a safe state after granting the request.\n");
+    } else {
+        printf("Granting the request will lead to an unsafe state.\n");
+    }
+
+    return 0;
+}
+
+// Function to check if the system is in a safe state after allocating resources to a process
+bool isSafeState(int request[], int process_id) {
+    // Temporary arrays to simulate the allocation and availability of resources
+    int temp_allocation[MAX_PROCESSES][MAX_RESOURCES];
+    int temp_available[MAX_RESOURCES];
+
+    // Initialize temporary arrays
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < num_resources; j++) {
+            temp_allocation[i][j] = allocation[i][j];
+        }
+    }
+    for (int i = 0; i < num_resources; i++) {
+        temp_available[i] = available[i] - request[i];
+        temp_allocation[process_id][i] += request[i];
+    }
+
+    // Array to track if a process is finished
+    bool finish[MAX_PROCESSES] = {false};
+
+    // Loop until all processes are finished or no process can be executed
+    bool can_execute = true;
+    while (can_execute) {
+        can_execute = false;
+        for (int i = 0; i < num_processes; i++) {
+            if (!finish[i]) {
+                bool can_allocate = true;
+                for (int j = 0; j < num_resources; j++) {
+                    if (temp_available[j] < max[i][j] - temp_allocation[i][j]) {
+                        can_allocate = false;
+                        break;
+                    }
+                }
+                if (can_allocate) {
+                    // Grant the resources to process i
+                    finish[i] = true;
+                    can_execute = true;
+                    for (int j = 0; j < num_resources; j++) {
+                        temp_available[j] += temp_allocation[i][j];
+                    }
+                }
+            }
+        }
+    }
+
+    // Check if all processes are finished
+    for (int i = 0; i < num_processes; i++) {
+        if (!finish[i]) {
+            return false; // System is in an unsafe state
+        }
+    }
+
+    return true; // System is in a safe state
+}
+----------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int compare(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Sort the request array
+    qsort(requests, n, sizeof(int), compare);
+
+    // Find the index of the head position in the sorted array
+    int head_index = 0;
+    while (head_index < n && requests[head_index] < head) {
+        head_index++;
+    }
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head_index; i >= 0; i--) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+        printf("%d ", min_pos); // Move to the beginning
+        total_head_movements += head; // Move to the beginning
+        head = max_pos; // Move to the end
+        for (int i = head_index + 1; i < n; i++) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+    } else {
+        // Moving right
+        for (int i = head_index; i < n; i++) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+        printf("%d ", max_pos); // Move to the end
+        total_head_movements += (max_pos - head); // Move to the end
+        head = min_pos; // Move to the beginning
+        for (int i = head_index - 1; i >= 0; i--) {
+            printf("%d ", requests[i]);
+            total_head_movements += abs_diff(head, requests[i]);
+            head = requests[i];
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+---------------------------------------------------------------------------------------------------------
+Slip 6
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Global variables
+int bit_vector[MAX_BLOCKS] = {0}; // 0 represents free block, 1 represents allocated block
+int num_blocks;
+int start_block = -1; // Start block of the contiguous allocated space
+
+// Function prototypes
+void initializeBitVector();
+void showBitVector();
+void createNewFile(int file_size);
+void showDirectory();
+void releaseFile();
+
+int main() {
+    int choice;
+    
+    // Seed for random number generation
+    srand(time(NULL));
+
+    // Input number of blocks in the disk
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    // Initialize bit vector
+    initializeBitVector();
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector();
+                break;
+            case 2: {
+                int file_size;
+                printf("Enter the size of the file: ");
+                scanf("%d", &file_size);
+                createNewFile(file_size);
+                break;
+            }
+            case 3:
+                showDirectory();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+// Function to initialize the bit vector
+void initializeBitVector() {
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    int consecutive_allocated_blocks = rand() % (num_blocks / 2); // Randomly choose number of consecutive allocated blocks
+    int start = rand() % (num_blocks - consecutive_allocated_blocks); // Randomly choose start block
+    for (int i = start; i < start + consecutive_allocated_blocks; i++) {
+        bit_vector[i] = 1; // Mark the block as allocated
+    }
+    start_block = start;
+}
+
+// Function to display the bit vector
+void showBitVector() {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", bit_vector[i]);
+    }
+    printf("\n");
+}
+
+// Function to create a new file
+void createNewFile(int file_size) {
+    // Check if there is enough contiguous free space
+    int consecutive_free_blocks = 0;
+    for (int i = 0; i < num_blocks; i++) {
+        if (!bit_vector[i]) {
+            consecutive_free_blocks++;
+            if (consecutive_free_blocks == file_size) {
+                // Allocate the blocks
+                start_block = i - file_size + 1;
+                for (int j = start_block; j <= i; j++) {
+                    bit_vector[j] = 1;
+                }
+                printf("File created starting from block %d.\n", start_block);
+                return;
+            }
+        } else {
+            consecutive_free_blocks = 0;
+        }
+    }
+    printf("Not enough contiguous free space to create the file.\n");
+}
+
+// Function to display the directory
+void showDirectory() {
+    if (start_block == -1) {
+        printf("Directory is empty.\n");
+    } else {
+        printf("Directory (Start block of file: %d, Size of file: %d blocks)\n", start_block, 1); // For simplicity, assuming each file has size 1 block
+    }
+}
+
+// Function to release the file
+void releaseFile() {
+    if (start_block != -1) {
+        for (int i = start_block; i < start_block + 1; i++) { // For simplicity, assuming each file has size 1 block
+            bit_vector[i] = 0;
+        }
+        start_block = -1;
+        printf("File released.\n");
+    } else {
+        printf("No file to release.\n");
+    }
+}
+------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void sstf(int requests[], int n, int head) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    printf("Order of service: ");
+    
+    // Serve requests until all requests are served
+    for (int i = 0; i < n; i++) {
+        int min_distance = max_pos - min_pos + 1; // Initialize with the maximum possible distance
+        int min_index = -1;
+
+        // Find the request with the shortest seek time
+        for (int j = 0; j < n; j++) {
+            if (!requests[j]) continue; // Skip already served requests
+
+            int distance = abs_diff(head, requests[j]);
+            if (distance < min_distance) {
+                min_distance = distance;
+                min_index = j;
+            }
+        }
+
+        // Serve the request with the shortest seek time
+        printf("%d ", requests[min_index]);
+        total_head_movements += min_distance;
+        head = requests[min_index];
+        requests[min_index] = 0; // Mark as served
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("\n");
+
+    sstf(requests, total_blocks, head);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+------------------------------------------------------------------------------------------------------------------------------
+Slip 7
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES];
+int num_processes, num_resources;
+
+// Function prototypes
+bool isSafeState(int request[], int process_id);
+void allocateResources(int request[], int process_id);
+void releaseResources(int request[], int process_id);
+
+int main() {
+    int request[MAX_RESOURCES];
+    int process_id;
+
+    // Input number of processes and resources
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+    printf("Enter the number of resources: ");
+    scanf("%d", &num_resources);
+
+    // Input allocation matrix
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Input max matrix
+    printf("Enter the max matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Input available resources
+    printf("Enter the available resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &available[i]);
+    }
+
+    // Input process id and request
+    printf("Enter the process id: ");
+    scanf("%d", &process_id);
+    printf("Enter the resource request for process %d:\n", process_id);
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &request[i]);
+    }
+
+    // Check if the current system is in a safe state after the request
+    if (isSafeState(request, process_id - 1)) {
+        printf("The system is in a safe state after granting the request.\n");
+    } else {
+        printf("Granting the request will lead to an unsafe state.\n");
+    }
+
+    return 0;
+}
+
+// Function to check if the system is in a safe state after allocating resources to a process
+bool isSafeState(int request[], int process_id) {
+    // Temporary arrays to simulate the allocation and availability of resources
+    int temp_allocation[MAX_PROCESSES][MAX_RESOURCES];
+    int temp_available[MAX_RESOURCES];
+
+    // Initialize temporary arrays
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < num_resources; j++) {
+            temp_allocation[i][j] = allocation[i][j];
+        }
+    }
+    for (int i = 0; i < num_resources; i++) {
+        temp_available[i] = available[i] - request[i];
+        temp_allocation[process_id][i] += request[i];
+    }
+
+    // Array to track if a process is finished
+    bool finish[MAX_PROCESSES] = {false};
+
+    // Loop until all processes are finished or no process can be executed
+    bool can_execute = true;
+    while (can_execute) {
+        can_execute = false;
+        for (int i = 0; i < num_processes; i++) {
+            if (!finish[i]) {
+                bool can_allocate = true;
+                for (int j = 0; j < num_resources; j++) {
+                    if (temp_available[j] < max[i][j] - temp_allocation[i][j]) {
+                        can_allocate = false;
+                        break;
+                    }
+                }
+                if (can_allocate) {
+                    // Grant the resources to process i
+                    finish[i] = true;
+                    can_execute = true;
+                    for (int j = 0; j < num_resources; j++) {
+                        temp_available[j] += temp_allocation[i][j];
+                    }
+                }
+            }
+        }
+    }
+
+    // Check if all processes are finished
+    for (int i = 0; i < num_processes; i++) {
+        if (!finish[i]) {
+            return false; // System is in an unsafe state
+        }
+    }
+
+    return true; // System is in a safe state
+}
+-------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+        for (int i = min_pos; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+        for (int i = max_pos; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+---------------------------------------------------------------------------------------------------------------
+Slip 8
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Global variables
+int bit_vector[MAX_BLOCKS] = {0}; // 0 represents free block, 1 represents allocated block
+int num_blocks;
+
+// Function prototypes
+void initializeBitVector();
+void showBitVector();
+void createNewFile();
+void showDirectory();
+
+int main() {
+    int choice;
+    
+    // Seed for random number generation
+    srand(time(NULL));
+
+    // Input number of blocks in the disk
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    // Initialize bit vector
+    initializeBitVector();
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector();
+                break;
+            case 2:
+                createNewFile();
+                break;
+            case 3:
+                showDirectory();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+// Function to initialize the bit vector
+void initializeBitVector() {
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    for (int i = 0; i < num_allocated_blocks; i++) {
+        int block_number = rand() % num_blocks; // Randomly choose block number
+        bit_vector[block_number] = 1; // Mark the block as allocated
+    }
+}
+
+// Function to display the bit vector
+void showBitVector() {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", bit_vector[i]);
+    }
+    printf("\n");
+}
+
+// Function to create a new file
+void createNewFile() {
+    printf("Creating new file...\n");
+    int start_block = -1;
+    int file_size = 0;
+    for (int i = 0; i < num_blocks; i++) {
+        if (bit_vector[i] == 0) { // If the block is free
+            if (start_block == -1) { // If start block is not set
+                start_block = i; // Set start block
+            }
+            file_size++; // Increment file size
+        } else { // If the block is allocated
+            start_block = -1; // Reset start block
+            file_size = 0; // Reset file size
+        }
+        if (file_size >= 1) { // If a contiguous free space is found
+            printf("File created starting from block %d.\n", start_block);
+            // Mark the blocks as allocated
+            for (int j = start_block; j < start_block + file_size; j++) {
+                bit_vector[j] = 1;
+            }
+            return;
+        }
+    }
+    printf("Not enough contiguous free space to create the file.\n");
+}
+
+// Function to display the directory
+void showDirectory() {
+    printf("Directory (Block numbers of files):\n");
+    bool in_file = false;
+    for (int i = 0; i < num_blocks; i++) {
+        if (!in_file && bit_vector[i] == 1) { // If entering a new file
+            printf("%d ", i); // Print start block of the file
+            in_file = true; // Set flag to indicate inside a file
+        } else if (in_file && bit_vector[i] == 0) { // If leaving a file
+            printf("%d\n", i - 1); // Print end block of the file
+            in_file = false; // Reset flag
+        }
+    }
+    if (in_file) { // If the last file extends to the end of the disk
+        printf("%d\n", num_blocks - 1); // Print end block of the file
+    }
+}
+-------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void sstf(int requests[], int n, int head) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = INT_MAX; // Assuming disk range from 0 to INT_MAX
+
+    printf("Order of service: ");
+    
+    // Serve requests until all requests are served
+    for (int i = 0; i < n; i++) {
+        int min_distance = max_pos - min_pos + 1; // Initialize with the maximum possible distance
+        int min_index = -1;
+
+        // Find the request with the shortest seek time
+        for (int j = 0; j < n; j++) {
+            if (requests[j] == -1) continue; // Skip already served requests
+
+            int distance = abs_diff(head, requests[j]);
+            if (distance < min_distance) {
+                min_distance = distance;
+                min_index = j;
+            }
+        }
+
+        // Serve the request with the shortest seek time
+        printf("%d ", requests[min_index]);
+        total_head_movements += min_distance;
+        head = requests[min_index];
+        requests[min_index] = -1; // Mark as served
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("\n");
+
+    sstf(requests, total_blocks, head);
+
+    return 0;
+}
+---------------------------------------------------------------------------------------------------------------------
+Slip 9
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES];
+int num_processes, num_resources;
+
+// Function prototypes
+bool isSafeState(int request[], int process_id);
+void allocateResources(int request[], int process_id);
+void releaseResources(int request[], int process_id);
+
+int main() {
+    int request[MAX_RESOURCES];
+    int process_id;
+
+    // Input number of processes and resources
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+    printf("Enter the number of resources: ");
+    scanf("%d", &num_resources);
+
+    // Input allocation matrix
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Input max matrix
+    printf("Enter the max matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Input available resources
+    printf("Enter the available resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &available[i]);
+    }
+
+    // Input process id and request
+    printf("Enter the process id: ");
+    scanf("%d", &process_id);
+    printf("Enter the resource request for process %d:\n", process_id);
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &request[i]);
+    }
+
+    // Check if the current system is in a safe state after the request
+    if (isSafeState(request, process_id - 1)) {
+        printf("The system is in a safe state after granting the request.\n");
+    } else {
+        printf("Granting the request will lead to an unsafe state.\n");
+    }
+
+    return 0;
+}
+
+// Function to check if the system is in a safe state after allocating resources to a process
+bool isSafeState(int request[], int process_id) {
+    // Temporary arrays to simulate the allocation and availability of resources
+    int temp_allocation[MAX_PROCESSES][MAX_RESOURCES];
+    int temp_available[MAX_RESOURCES];
+
+    // Initialize temporary arrays
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < num_resources; j++) {
+            temp_allocation[i][j] = allocation[i][j];
+        }
+    }
+    for (int i = 0; i < num_resources; i++) {
+        temp_available[i] = available[i] - request[i];
+        temp_allocation[process_id][i] += request[i];
+    }
+
+    // Array to track if a process is finished
+    bool finish[MAX_PROCESSES] = {false};
+
+    // Loop until all processes are finished or no process can be executed
+    bool can_execute = true;
+    while (can_execute) {
+        can_execute = false;
+        for (int i = 0; i < num_processes; i++) {
+            if (!finish[i]) {
+                bool can_allocate = true;
+                for (int j = 0; j < num_resources; j++) {
+                    if (temp_available[j] < max[i][j] - temp_allocation[i][j]) {
+                        can_allocate = false;
+                        break;
+                    }
+                }
+                if (can_allocate) {
+                    // Grant the resources to process i
+                    finish[i] = true;
+                    can_execute = true;
+                    for (int j = 0; j < num_resources; j++) {
+                        temp_available[j] += temp_allocation[i][j];
+                    }
+                }
+            }
+        }
+    }
+
+    // Check if all processes are finished
+    for (int i = 0; i < num_processes; i++) {
+        if (!finish[i]) {
+            return false; // System is in an unsafe state
+        }
+    }
+
+    return true; // System is in a safe state
+}
+-----------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void look(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    look(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+---------------------------------------------------------------------------------------------------------------------------------------
+Slip 10
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int array[ARRAY_SIZE];
+    int local_sum = 0, total_sum = 0;
+    double average;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Generate random numbers
+    srand(rank); // Using rank as seed for random number generation
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        array[i] = rand() % 100; // Generate random numbers between 0 and 99
+    }
+
+    // Calculate local sum
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        local_sum += array[i];
+    }
+
+    // Reduce local sums to get total sum
+    MPI_Reduce(&local_sum, &total_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Calculate average
+    if (rank == 0) {
+        average = (double) total_sum / (ARRAY_SIZE * size);
+        printf("Total sum: %d\n", total_sum);
+        printf("Average: %.2f\n", average);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+----------------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void c_scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Sort the request array
+    qsort(requests, n, sizeof(int), compare);
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+        for (int i = max_pos; i > head; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+        for (int i = min_pos; i < head; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                    requests[j] = -1; // Mark as served
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    c_scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+-------------------------------------------------------------------------------
+Slip 11
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int need[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES];
+int num_processes, num_resources;
+
+// Function prototypes
+void acceptAvailable();
+void displayAllocationMax();
+void displayNeed();
+void displayAvailable();
+
+int main() {
+    char choice;
+
+    // Input number of processes and resources
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+    printf("Enter the number of resources: ");
+    scanf("%d", &num_resources);
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("a) Accept Available\n");
+        printf("b) Display Allocation, Max\n");
+        printf("c) Display the contents of need matrix\n");
+        printf("d) Display Available\n");
+        printf("e) Exit\n");
+        printf("Enter your choice: ");
+        scanf(" %c", &choice);
+
+        switch (choice) {
+            case 'a':
+                acceptAvailable();
+                break;
+            case 'b':
+                displayAllocationMax();
+                break;
+            case 'c':
+                displayNeed();
+                break;
+            case 'd':
+                displayAvailable();
+                break;
+            case 'e':
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
+                break;
+        }
+    } while (choice != 'e');
+
+    return 0;
+}
+
+// Function to accept available resources
+void acceptAvailable() {
+    printf("Enter the available resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &available[i]);
+    }
+}
+
+// Function to display allocation and max matrices
+void displayAllocationMax() {
+    printf("Allocation Matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("%d ", allocation[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("Max Matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("%d ", max[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Function to display the contents of the need matrix
+void displayNeed() {
+    printf("Need Matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Function to display available resources
+void displayAvailable() {
+    printf("Available Resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: %d\n", i + 1, available[i]);
+    }
+}
+-------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_min = INT_MAX;
+    int global_min;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers
+    int numbers[ARRAY_SIZE];
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+    }
+
+    // Calculate local minimum
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        if (numbers[i] < local_min) {
+            local_min = numbers[i];
+        }
+    }
+
+    // Find global minimum using MPI_Reduce
+    MPI_Reduce(&local_min, &global_min, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
+
+    // Print global minimum by rank 0
+    if (rank == 0) {
+        printf("Global Min: %d\n", global_min);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+mpicc mpi_min.c -o mpi_min
+mpirun -np <num_processes> ./mpi_min
+
+------------------------------------------------------------------------------------------------------------
+Slip 12
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_sum = 0, total_sum = 0;
+    double local_average, total_average;
+    int numbers[ARRAY_SIZE];
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+    }
+
+    // Calculate local sum
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        local_sum += numbers[i];
+    }
+
+    // Reduce local sums to get total sum
+    MPI_Reduce(&local_sum, &total_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Calculate local average
+    local_average = (double)local_sum / ARRAY_SIZE;
+
+    // Reduce local averages to get total average
+    MPI_Reduce(&local_average, &total_average, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Print sum and average by rank 0
+    if (rank == 0) {
+        printf("Total Sum: %d\n", total_sum);
+        printf("Total Average: %.2f\n", total_average / size); // Average of averages
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+------------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void c_look(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = max_pos; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = min_pos; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    c_look(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+-------------------------------------------------------------------------------
+Slip 13
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int need[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES];
+int num_processes, num_resources;
+
+// Function prototypes
+void calculateNeedMatrix();
+bool isSafeState(int safe_sequence[]);
+
+int main() {
+    int safe_sequence[MAX_PROCESSES];
+
+    // Input number of processes and resources
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+    printf("Enter the number of resources: ");
+    scanf("%d", &num_resources);
+
+    // Input allocation matrix
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Input max matrix
+    printf("Enter the max matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("For process %d:\n", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("Resource %d: ", j + 1);
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Input available resources
+    printf("Enter the available resources:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i + 1);
+        scanf("%d", &available[i]);
+    }
+
+    // Calculate and display the content of need matrix
+    calculateNeedMatrix();
+    printf("Need Matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i + 1);
+        for (int j = 0; j < num_resources; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Check if the system is in a safe state and display the safe sequence
+    if (isSafeState(safe_sequence)) {
+        printf("The system is in a safe state.\n");
+        printf("Safe Sequence:");
+        for (int i = 0; i < num_processes; i++) {
+            printf(" P%d", safe_sequence[i]);
+        }
+        printf("\n");
+    } else {
+        printf("The system is not in a safe state.\n");
+    }
+
+    return 0;
+}
+
+// Function to calculate the need matrix
+void calculateNeedMatrix() {
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < num_resources; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+// Function to check if the system is in a safe state and find the safe sequence
+bool isSafeState(int safe_sequence[]) {
+    int work[num_resources];
+    bool finish[num_processes];
+    for (int i = 0; i < num_resources; i++) {
+        work[i] = available[i];
+    }
+    for (int i = 0; i < num_processes; i++) {
+        finish[i] = false;
+    }
+
+    int count = 0;
+    while (count < num_processes) {
+        bool found = false;
+        for (int i = 0; i < num_processes; i++) {
+            if (!finish[i]) {
+                bool can_allocate = true;
+                for (int j = 0; j < num_resources; j++) {
+                    if (need[i][j] > work[j]) {
+                        can_allocate = false;
+                        break;
+                    }
+                }
+                if (can_allocate) {
+                    // Allocate resources
+                    for (int j = 0; j < num_resources; j++) {
+                        work[j] += allocation[i][j];
+                    }
+                    safe_sequence[count] = i + 1;
+                    finish[i] = true;
+                    count++;
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            // If no process can be allocated resources, the system is in an unsafe state
+            return false;
+        }
+    }
+    // If all processes can be allocated resources, the system is in a safe state
+    return true;
+}
+--------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = min_pos; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = max_pos; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+------------------------------------------------------------------------------------------
+Slip 14
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Global variables
+int bit_vector[MAX_BLOCKS] = {0}; // 0 represents free block, 1 represents allocated block
+int num_blocks;
+
+// Function prototypes
+void initializeBitVector();
+void showBitVector();
+void showDirectory();
+void deleteFile();
+
+int main() {
+    int choice;
+    
+    // Seed for random number generation
+    srand(time(NULL));
+
+    // Input number of blocks in the disk
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    // Initialize bit vector
+    initializeBitVector();
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Show Directory\n");
+        printf("3. Delete File\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector();
+                break;
+            case 2:
+                showDirectory();
+                break;
+            case 3:
+                deleteFile();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+// Function to initialize the bit vector
+void initializeBitVector() {
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    for (int i = 0; i < num_allocated_blocks; i++) {
+        int block_number = rand() % num_blocks; // Randomly choose block number
+        bit_vector[block_number] = 1; // Mark the block as allocated
+    }
+}
+
+// Function to display the bit vector
+void showBitVector() {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", bit_vector[i]);
+    }
+    printf("\n");
+}
+
+// Function to display the directory
+void showDirectory() {
+    printf("Directory (Block numbers of files):\n");
+    bool in_file = false;
+    for (int i = 0; i < num_blocks; i++) {
+        if (!in_file && bit_vector[i] == 1) { // If entering a new file
+            printf("%d ", i); // Print start block of the file
+            in_file = true; // Set flag to indicate inside a file
+        } else if (in_file && bit_vector[i] == 0) { // If leaving a file
+            printf("%d\n", i - 1); // Print end block of the file
+            in_file = false; // Reset flag
+        }
+    }
+    if (in_file) { // If the last file extends to the end of the disk
+        printf("%d\n", num_blocks - 1); // Print end block of the file
+    }
+}
+
+// Function to delete a file
+void deleteFile() {
+    printf("Enter the starting block of the file to delete: ");
+    int start_block;
+    scanf("%d", &start_block);
+    if (bit_vector[start_block] == 0) {
+        printf("Error: The specified block is not allocated.\n");
+        return;
+    }
+    int end_block = start_block;
+    while (end_block < num_blocks && bit_vector[end_block] == 1) {
+        bit_vector[end_block] = 0;
+        end_block++;
+    }
+    printf("File deleted successfully.\n");
+}
+-------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void sstf(int requests[], int n, int head) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = INT_MAX; // Assuming disk range from 0 to INT_MAX
+
+    printf("Order of service: ");
+    
+    // Serve requests until all requests are served
+    for (int i = 0; i < n; i++) {
+        int min_distance = max_pos - min_pos + 1; // Initialize with the maximum possible distance
+        int min_index = -1;
+
+        // Find the request with the shortest seek time
+        for (int j = 0; j < n; j++) {
+            if (requests[j] == -1) continue; // Skip already served requests
+
+            int distance = abs_diff(head, requests[j]);
+            if (distance < min_distance) {
+                min_distance = distance;
+                min_index = j;
+            }
+        }
+
+        // Serve the request with the shortest seek time
+        printf("%d ", requests[min_index]);
+        total_head_movements += min_distance;
+        head = requests[min_index];
+        requests[min_index] = -1; // Mark as served
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("\n");
+
+    sstf(requests, total_blocks, head);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+------------------------------------------------------------------------------------------------------------------
+Slip 15
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Structure to represent a block
+struct Block {
+    int data;
+    struct Block *next;
+};
+
+// Global variables
+struct Block *disk[MAX_BLOCKS]; // Array of pointers to blocks
+bool allocated[MAX_BLOCKS] = {false}; // Array to track allocated blocks
+int num_blocks;
+
+// Function prototypes
+void initializeDisk();
+void showBitVector();
+void createNewFile();
+void showDirectory();
+
+int main() {
+    int choice;
+    
+    // Seed for random number generation
+    srand(time(NULL));
+
+    // Input number of blocks in the disk
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    // Initialize disk
+    initializeDisk();
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector();
+                break;
+            case 2:
+                createNewFile();
+                break;
+            case 3:
+                showDirectory();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+// Function to initialize the disk
+void initializeDisk() {
+    for (int i = 0; i < num_blocks; i++) {
+        disk[i] = NULL; // Initialize all pointers to NULL
+    }
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    for (int i = 0; i < num_allocated_blocks; i++) {
+        int block_number;
+        do {
+            block_number = rand() % num_blocks; // Randomly choose block number
+        } while (allocated[block_number]); // Repeat until unallocated block is found
+        allocated[block_number] = true; // Mark the block as allocated
+    }
+}
+
+// Function to display the bit vector
+void showBitVector() {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", allocated[i] ? 1 : 0);
+    }
+    printf("\n");
+}
+
+// Function to create a new file
+void createNewFile() {
+    struct Block *file = (struct Block *)malloc(sizeof(struct Block));
+    if (file == NULL) {
+        printf("Error: Memory allocation failed.\n");
+        return;
+    }
+    int block_number;
+    do {
+        printf("Enter the block number to allocate for the new file: ");
+        scanf("%d", &block_number);
+        if (block_number < 0 || block_number >= num_blocks) {
+            printf("Error: Invalid block number. Please enter a number between 0 and %d.\n", num_blocks - 1);
+        } else if (allocated[block_number]) {
+            printf("Error: The specified block is already allocated.\n");
+        }
+    } while (block_number < 0 || block_number >= num_blocks || allocated[block_number]);
+    file->data = block_number;
+    file->next = disk[block_number];
+    disk[block_number] = file;
+    allocated[block_number] = true;
+    printf("New file created successfully.\n");
+}
+
+// Function to display the directory
+void showDirectory() {
+    printf("Directory (Block numbers of files):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        if (disk[i] != NULL) {
+            printf("%d: ", i);
+            struct Block *curr = disk[i];
+            while (curr != NULL) {
+                printf("%d -> ", curr->data);
+                curr = curr->next;
+            }
+            printf("NULL\n");
+        }
+    }
+}
+-----------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void c_scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Sort the request array
+    qsort(requests, n, sizeof(int), compare);
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = max_pos; i >= head; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = min_pos; i <= head; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    c_scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+---------------------------------------------------------------------------------------------------------
+Slip 16
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Global variables
+bool bit_vector[MAX_BLOCKS] = {false}; // Array to track allocated blocks
+int num_blocks;
+
+// Function prototypes
+void initializeBitVector();
+void showBitVector();
+void createNewFile();
+void showDirectory();
+
+int main() {
+    int choice;
+    
+    // Seed for random number generation
+    srand(time(NULL));
+
+    // Input number of blocks in the disk
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    // Initialize bit vector
+    initializeBitVector();
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector();
+                break;
+            case 2:
+                createNewFile();
+                break;
+            case 3:
+                showDirectory();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+// Function to initialize the bit vector
+void initializeBitVector() {
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    for (int i = 0; i < num_allocated_blocks; i++) {
+        int block_number;
+        do {
+            block_number = rand() % num_blocks; // Randomly choose block number
+        } while (bit_vector[block_number]); // Repeat until unallocated block is found
+        bit_vector[block_number] = true; // Mark the block as allocated
+    }
+}
+
+// Function to display the bit vector
+void showBitVector() {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", bit_vector[i] ? 1 : 0);
+    }
+    printf("\n");
+}
+
+// Function to create a new file
+void createNewFile() {
+    int start_block = -1;
+    int length = 0;
+    for (int i = 0; i < num_blocks; i++) {
+        if (!bit_vector[i]) {
+            if (start_block == -1) {
+                start_block = i;
+            }
+            length++;
+        } else {
+            start_block = -1;
+            length = 0;
+        }
+        if (length >= 5) { // Assuming the file needs at least 5 contiguous blocks
+            break;
+        }
+    }
+    if (start_block != -1) {
+        for (int i = start_block; i < start_block + 5; i++) {
+            bit_vector[i] = true; // Mark the blocks as allocated
+        }
+        printf("New file created successfully. Starting block: %d, Length: %d\n", start_block, length);
+    } else {
+        printf("Error: Not enough contiguous free blocks to create a new file.\n");
+    }
+}
+
+// Function to display the directory
+void showDirectory() {
+    printf("Directory (Block numbers of files):\n");
+    bool in_file = false;
+    for (int i = 0; i < num_blocks; i++) {
+        if (!in_file && bit_vector[i]) { // If entering a new file
+            printf("%d ", i); // Print start block of the file
+            in_file = true; // Set flag to indicate inside a file
+        } else if (in_file && !bit_vector[i]) { // If leaving a file
+            printf("%d\n", i - 1); // Print end block of the file
+            in_file = false; // Reset flag
+        }
+    }
+    if (in_file) { // If the last file extends to the end of the disk
+        printf("%d\n", num_blocks - 1); // Print end block of the file
+    }
+}
+-----------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_min = INT_MAX;
+    int global_min;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers
+    int numbers[ARRAY_SIZE];
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+    }
+
+    // Calculate local minimum
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        if (numbers[i] < local_min) {
+            local_min = numbers[i];
+        }
+    }
+
+    // Find global minimum using MPI_Reduce
+    MPI_Reduce(&local_min, &global_min, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
+
+    // Print global minimum by rank 0
+    if (rank == 0) {
+        printf("Global Min: %d\n", global_min);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+mpicc mpi_min.c -o mpi_min
+mpirun -np <num_processes> ./mpi_min
+---------------------------------------------------------------------------------------------------------------------------
+Slip 17
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Structure to represent a block
+struct Block {
+    int data;
+    struct Block *next;
+};
+
+// Structure to represent a file
+struct File {
+    int index_block;
+    struct Block *blocks;
+};
+
+// Global variables
+bool bit_vector[MAX_BLOCKS] = {false}; // Array to track allocated blocks
+struct File *files[MAX_BLOCKS] = {NULL}; // Array to track files
+int num_blocks;
+
+// Function prototypes
+void initializeBitVector();
+void showBitVector();
+void showDirectory();
+void deleteFile();
+
+int main() {
+    int choice;
+    
+    // Seed for random number generation
+    srand(time(NULL));
+
+    // Input number of blocks in the disk
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    // Initialize bit vector
+    initializeBitVector();
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Show Directory\n");
+        printf("3. Delete File\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector();
+                break;
+            case 2:
+                showDirectory();
+                break;
+            case 3:
+                deleteFile();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+// Function to initialize the bit vector
+void initializeBitVector() {
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    for (int i = 0; i < num_allocated_blocks; i++) {
+        int block_number;
+        do {
+            block_number = rand() % num_blocks; // Randomly choose block number
+        } while (bit_vector[block_number]); // Repeat until unallocated block is found
+        bit_vector[block_number] = true; // Mark the block as allocated
+    }
+}
+
+// Function to display the bit vector
+void showBitVector() {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", bit_vector[i] ? 1 : 0);
+    }
+    printf("\n");
+}
+
+// Function to display the directory
+void showDirectory() {
+    printf("Directory (Files):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        if (files[i] != NULL) {
+            printf("File at index block %d: ", i);
+            struct Block *curr = files[i]->blocks;
+            while (curr != NULL) {
+                printf("%d -> ", curr->data);
+                curr = curr->next;
+            }
+            printf("NULL\n");
+        }
+    }
+}
+
+// Function to delete a file
+void deleteFile() {
+    int index_block;
+    printf("Enter the index block of the file to delete: ");
+    scanf("%d", &index_block);
+    if (files[index_block] == NULL) {
+        printf("Error: No file exists at the specified index block.\n");
+        return;
+    }
+    struct Block *curr = files[index_block]->blocks;
+    while (curr != NULL) {
+        bit_vector[curr->data] = false; // Mark the blocks as free
+        struct Block *temp = curr;
+        curr = curr->next;
+        free(temp); // Free memory
+    }
+    free(files[index_block]); // Free memory
+    files[index_block] = NULL;
+    printf("File deleted successfully.\n");
+}
+-----------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void look(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    look(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+-----------------------------------------------------------------------------------------------------------------------
+Slip 18
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_BLOCKS 100
+
+// Structure to represent a block
+struct Block {
+    int data;
+    struct Block *next;
+};
+
+// Structure to represent a file
+struct File {
+    int index_block;
+    struct Block *blocks;
+};
+
+// Global variables
+bool bit_vector[MAX_BLOCKS] = {false}; // Array to track allocated blocks
+struct File *files[MAX_BLOCKS] = {NULL}; // Array to track files
+int num_blocks;
+
+// Function prototypes
+void initializeBitVector();
+void showBitVector();
+void createNewFile();
+void showDirectory();
+void deleteFile();
+
+int main() {
+    int choice;
+    
+    // Seed for random number generation
+    srand(time(NULL));
+
+    // Input number of blocks in the disk
+    printf("Enter the number of blocks in the disk: ");
+    scanf("%d", &num_blocks);
+
+    // Initialize bit vector
+    initializeBitVector();
+
+    // Menu-driven program
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Delete File\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showBitVector();
+                break;
+            case 2:
+                createNewFile();
+                break;
+            case 3:
+                showDirectory();
+                break;
+            case 4:
+                deleteFile();
+                break;
+            case 5:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 5.\n");
+                break;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
+
+// Function to initialize the bit vector
+void initializeBitVector() {
+    // Randomly mark some blocks as allocated
+    int num_allocated_blocks = rand() % num_blocks; // Randomly choose number of allocated blocks
+    for (int i = 0; i < num_allocated_blocks; i++) {
+        int block_number;
+        do {
+            block_number = rand() % num_blocks; // Randomly choose block number
+        } while (bit_vector[block_number]); // Repeat until unallocated block is found
+        bit_vector[block_number] = true; // Mark the block as allocated
+    }
+}
+
+// Function to display the bit vector
+void showBitVector() {
+    printf("Bit Vector (0: Free, 1: Allocated):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        printf("%d ", bit_vector[i] ? 1 : 0);
+    }
+    printf("\n");
+}
+
+// Function to create a new file
+void createNewFile() {
+    struct File *new_file = (struct File *)malloc(sizeof(struct File));
+    if (new_file == NULL) {
+        printf("Error: Memory allocation failed.\n");
+        return;
+    }
+    int index_block;
+    do {
+        printf("Enter the index block for the new file: ");
+        scanf("%d", &index_block);
+        if (index_block < 0 || index_block >= num_blocks) {
+            printf("Error: Invalid index block. Please enter a number between 0 and %d.\n", num_blocks - 1);
+        } else if (files[index_block] != NULL) {
+            printf("Error: The specified index block is already in use.\n");
+        }
+    } while (index_block < 0 || index_block >= num_blocks || files[index_block] != NULL);
+    new_file->index_block = index_block;
+    new_file->blocks = NULL;
+    int block_number;
+    while (true) {
+        printf("Enter block number to allocate (enter -1 to stop): ");
+        scanf("%d", &block_number);
+        if (block_number == -1) {
+            break;
+        }
+        if (block_number < 0 || block_number >= num_blocks) {
+            printf("Error: Invalid block number. Please enter a number between 0 and %d.\n", num_blocks - 1);
+            continue;
+        }
+        if (bit_vector[block_number]) {
+            printf("Error: The specified block is already allocated.\n");
+            continue;
+        }
+        bit_vector[block_number] = true; // Mark the block as allocated
+        struct Block *new_block = (struct Block *)malloc(sizeof(struct Block));
+        if (new_block == NULL) {
+            printf("Error: Memory allocation failed.\n");
+            break;
+        }
+        new_block->data = block_number;
+        new_block->next = new_file->blocks;
+        new_file->blocks = new_block;
+    }
+    files[index_block] = new_file;
+    printf("New file created successfully.\n");
+}
+
+// Function to display the directory
+void showDirectory() {
+    printf("Directory (Files):\n");
+    for (int i = 0; i < num_blocks; i++) {
+        if (files[i] != NULL) {
+            printf("File at index block %d: ", i);
+            struct Block *curr = files[i]->blocks;
+            while (curr != NULL) {
+                printf("%d -> ", curr->data);
+                curr = curr->next;
+            }
+            printf("NULL\n");
+        }
+    }
+}
+
+// Function to delete a file
+void deleteFile() {
+    int index_block;
+    printf("Enter the index block of the file to delete: ");
+    scanf("%d", &index_block);
+    if (files[index_block] == NULL) {
+        printf("Error: No file exists at the specified index block.\n");
+        return;
+    }
+    struct Block *curr = files[index_block]->blocks;
+    while (curr != NULL) {
+        bit_vector[curr->data] = false; // Mark the blocks as free
+        struct Block *temp = curr;
+        curr = curr->next;
+        free(temp); // Free memory
+    }
+    free(files[index_block]); // Free memory
+    files[index_block] = NULL;
+    printf("File deleted successfully.\n");
+}
+----------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Sort the request array
+    qsort(requests, n, sizeof(int), compare);
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = min_pos; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = max_pos; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+--------------------------------------------------------------------------
+Slip 19
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 4
+
+// Function prototypes
+void calculateNeedMatrix(int need[][MAX_RESOURCES], int max[][MAX_RESOURCES], int allocation[][MAX_RESOURCES], int available[]);
+bool isSafeState(int need[][MAX_RESOURCES], int allocation[][MAX_RESOURCES], int available[], int processes[], int num_processes, int num_resources);
+
+int main() {
+    int num_processes, num_resources;
+    
+    // Input number of processes and resources
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+    printf("Enter the number of resources: ");
+    scanf("%d", &num_resources);
+
+    // Input allocation matrix
+    int allocation[MAX_PROCESSES][MAX_RESOURCES];
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i);
+        for (int j = 0; j < num_resources; j++) {
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Input maximum matrix
+    int max[MAX_PROCESSES][MAX_RESOURCES];
+    printf("Enter the maximum matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i);
+        for (int j = 0; j < num_resources; j++) {
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Input available vector
+    int available[MAX_RESOURCES];
+    printf("Enter the available vector: ");
+    for (int i = 0; i < num_resources; i++) {
+        scanf("%d", &available[i]);
+    }
+
+    // Calculate and display the need matrix
+    int need[MAX_PROCESSES][MAX_RESOURCES];
+    calculateNeedMatrix(need, max, allocation, available);
+    printf("\nNeed Matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i);
+        for (int j = 0; j < num_resources; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Check if the system is in a safe state and display the safe sequence if yes
+    int processes[MAX_PROCESSES];
+    for (int i = 0; i < num_processes; i++) {
+        processes[i] = i;
+    }
+    if (isSafeState(need, allocation, available, processes, num_processes, num_resources)) {
+        printf("\nThe system is in a safe state.\n");
+        printf("Safe sequence:");
+        for (int i = 0; i < num_processes; i++) {
+            printf(" P%d", processes[i]);
+        }
+        printf("\n");
+    } else {
+        printf("\nThe system is not in a safe state.\n");
+    }
+
+    return 0;
+}
+
+// Function to calculate the need matrix
+void calculateNeedMatrix(int need[][MAX_RESOURCES], int max[][MAX_RESOURCES], int allocation[][MAX_RESOURCES], int available[]) {
+    for (int i = 0; i < MAX_PROCESSES; i++) {
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+// Function to check if the system is in a safe state
+bool isSafeState(int need[][MAX_RESOURCES], int allocation[][MAX_RESOURCES], int available[], int processes[], int num_processes, int num_resources) {
+    bool finished[MAX_PROCESSES] = {false};
+    int work[MAX_RESOURCES];
+    for (int i = 0; i < num_resources; i++) {
+        work[i] = available[i];
+    }
+
+    int safe_sequence[MAX_PROCESSES];
+    int count = 0;
+    while (count < num_processes) {
+        bool found = false;
+        for (int i = 0; i < num_processes; i++) {
+            if (!finished[i]) {
+                bool can_allocate = true;
+                for (int j = 0; j < num_resources; j++) {
+                    if (need[i][j] > work[j]) {
+                        can_allocate = false;
+                        break;
+                    }
+                }
+                if (can_allocate) {
+                    for (int j = 0; j < num_resources; j++) {
+                        work[j] += allocation[i][j];
+                    }
+                    safe_sequence[count++] = i;
+                    finished[i] = true;
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            return false; // No process found that can be allocated resources
+        }
+    }
+    return true;
+}
+------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void c_scan(int requests[], int n, int head, int direction) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    // Sort the request array
+    qsort(requests, n, sizeof(int), compare);
+
+    // Traverse in the specified direction
+    printf("Order of service: ");
+    if (direction == -1) {
+        // Moving left
+        for (int i = head; i >= min_pos; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = max_pos; i >= head; i--) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    } else {
+        // Moving right
+        for (int i = head; i <= max_pos; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+        for (int i = min_pos; i <= head; i++) {
+            for (int j = 0; j < n; j++) {
+                if (requests[j] == i) {
+                    printf("%d ", requests[j]);
+                    total_head_movements += abs_diff(head, requests[j]);
+                    head = requests[j];
+                }
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head, direction;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("Enter the direction (Left: -1, Right: 1): ");
+    scanf("%d", &direction);
+
+    printf("\n");
+
+    c_scan(requests, total_blocks, head, direction);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+---------------------------------------------------------------------------------------------
+Slip 20
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to perform SCAN disk scheduling algorithm
+void scan(int disk[], int num_requests, int start_head, int direction) {
+    int total_head_movements = 0;
+    int current_head = start_head;
+    int min_cylinder = 0;
+    int max_cylinder = 199; // Assuming the disk has cylinders from 0 to 199
+
+    // Sort disk requests
+    for (int i = 0; i < num_requests - 1; i++) {
+        for (int j = 0; j < num_requests - i - 1; j++) {
+            if (disk[j] > disk[j + 1]) {
+                int temp = disk[j];
+                disk[j] = disk[j + 1];
+                disk[j + 1] = temp;
+            }
+        }
+    }
+
+    // Find index of current head position
+    int current_index = 0;
+    while (current_index < num_requests && disk[current_index] < current_head) {
+        current_index++;
+    }
+
+    // Determine scan direction
+    int scan_direction = direction == 0 ? -1 : 1; // -1 for left, 1 for right
+
+    // Scan in the given direction
+    printf("Order of serving requests: ");
+    if (scan_direction == -1) { // Scan towards smaller cylinder numbers (left)
+        for (int i = current_index - 1; i >= 0; i--) {
+            printf("%d ", disk[i]);
+            total_head_movements += abs(current_head - disk[i]);
+            current_head = disk[i];
+        }
+        total_head_movements += abs(current_head - min_cylinder); // Move to the min cylinder
+        current_head = min_cylinder;
+        printf("%d ", min_cylinder);
+        for (int i = current_index; i < num_requests; i++) {
+            printf("%d ", disk[i]);
+            total_head_movements += abs(current_head - disk[i]);
+            current_head = disk[i];
+        }
+    } else { // Scan towards larger cylinder numbers (right)
+        for (int i = current_index; i < num_requests; i++) {
+            printf("%d ", disk[i]);
+            total_head_movements += abs(current_head - disk[i]);
+            current_head = disk[i];
+        }
+        total_head_movements += abs(current_head - max_cylinder); // Move to the max cylinder
+        current_head = max_cylinder;
+        printf("%d ", max_cylinder);
+        for (int i = current_index - 1; i >= 0; i--) {
+            printf("%d ", disk[i]);
+            total_head_movements += abs(current_head - disk[i]);
+            current_head = disk[i];
+        }
+    }
+    printf("\nTotal number of head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int num_requests;
+    int start_head;
+    int direction;
+    
+    // Input total number of disk blocks
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &num_requests);
+
+    // Input disk requests
+    int disk[num_requests];
+    printf("Enter the disk request string:\n");
+    for (int i = 0; i < num_requests; i++) {
+        scanf("%d", &disk[i]);
+    }
+
+    // Input start head position
+    printf("Enter the start head position: ");
+    scanf("%d", &start_head);
+
+    // Input direction (0 for left, 1 for right)
+    printf("Enter the direction (0 for left, 1 for right): ");
+    scanf("%d", &direction);
+
+    // Perform SCAN algorithm
+    scan(disk, num_requests, start_head, direction);
+
+    return 0;
+}
+-------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_max = INT_MIN;
+    int global_max;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers
+    int numbers[ARRAY_SIZE];
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+    }
+
+    // Calculate local maximum
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        if (numbers[i] > local_max) {
+            local_max = numbers[i];
+        }
+    }
+
+    // Find global maximum using MPI_Reduce
+    MPI_Reduce(&local_max, &global_max, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
+
+    // Print global maximum by rank 0
+    if (rank == 0) {
+        printf("Global Max: %d\n", global_max);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+mpicc mpi_max.c -o mpi_max
+mpirun -np <num_processes> ./mpi_max
+-------------------------------------------------------------------------------------------------------
+Slip 21
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to perform FCFS disk scheduling algorithm
+void fcfs(int disk[], int num_requests, int start_head) {
+    int total_head_movements = 0;
+    int current_head = start_head;
+
+    // Process disk requests in the order they are received
+    printf("Order of serving requests: ");
+    for (int i = 0; i < num_requests; i++) {
+        printf("%d ", disk[i]);
+        total_head_movements += abs(current_head - disk[i]);
+        current_head = disk[i];
+    }
+    printf("\nTotal number of head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int num_requests;
+    int start_head;
+    
+    // Input total number of disk blocks
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &num_requests);
+
+    // Input disk requests
+    int disk[num_requests];
+    printf("Enter the disk request string:\n");
+    for (int i = 0; i < num_requests; i++) {
+        scanf("%d", &disk[i]);
+    }
+
+    // Input start head position
+    printf("Enter the start head position: ");
+    scanf("%d", &start_head);
+
+    // Perform FCFS algorithm
+    fcfs(disk, num_requests, start_head);
+
+    return 0;
+}
+-----------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_sum = 0;
+    int global_sum = 0;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers
+    int numbers[ARRAY_SIZE];
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+    }
+
+    // Calculate local sum of even numbers
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        if (numbers[i] % 2 == 0) {
+            local_sum += numbers[i];
+        }
+    }
+
+    // Find global sum using MPI_Reduce
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Print global sum by rank 0
+    if (rank == 0) {
+        printf("Sum of all even numbers: %d\n", global_sum);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+mpicc mpi_even_sum.c -o mpi_even_sum
+mpirun -np <num_processes> ./mpi_even_sum
+-------------------------------------------------------------------------------------------------------
+Slip 22
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_sum = 0;
+    int global_sum = 0;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator differently on each process
+    srand(rank);
+
+    // Generate random numbers and calculate local sum of odd numbers
+    int numbers[ARRAY_SIZE];
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+        if (numbers[i] % 2 != 0) { // Check if number is odd
+            local_sum += numbers[i];
+        }
+    }
+
+    // Sum up all local sums across processes
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Print global sum by rank 0
+    if (rank == 0) {
+        printf("Global Sum of Odd Numbers: %d\n", global_sum);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+----------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_BLOCKS 1000
+
+int allocated_blocks[MAX_BLOCKS] = {0}; // 0 for free, 1 for allocated
+
+void initialize(int n) {
+    srand(time(0)); // Seed for randomization
+    // Randomly mark some blocks as allocated
+    for (int i = 0; i < n; i++) {
+        allocated_blocks[i] = rand() % 2;
+    }
+}
+
+void show_bit_vector(int n) {
+    printf("Bit Vector (Allocated: 1, Free: 0):\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", allocated_blocks[i]);
+    }
+    printf("\n");
+}
+
+void delete_file(int n) {
+    int start;
+    printf("Enter the starting block of the file to be deleted (0-%d): ", n - 1);
+    scanf("%d", &start);
+    if (start < 0 || start >= n) {
+        printf("Invalid starting block number!\n");
+        return;
+    }
+    // Mark the blocks as free
+    while (allocated_blocks[start] == 1 && start < n) {
+        allocated_blocks[start] = 0;
+        start++;
+    }
+    printf("File deleted successfully.\n");
+}
+
+int main() {
+    int n, choice;
+    
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &n);
+    
+    initialize(n);
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Delete already created file\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                show_bit_vector(n);
+                break;
+            case 2:
+                delete_file(n);
+                break;
+            case 3:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
+        }
+    } while (choice != 3);
+
+    return 0;
+}
+-------------------------------------------------------------------------------------------------------
+Slip 23
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+// Function prototypes
+void calculateNeedMatrix(int need[][MAX_RESOURCES], int max[][MAX_RESOURCES], int allocation[][MAX_RESOURCES], int num_processes, int num_resources);
+bool checkRequest(int request[], int need[], int available[], int num_resources);
+
+int main() {
+    int num_processes, num_resources;
+
+    // Input number of resource types
+    printf("Enter the number of resource types: ");
+    scanf("%d", &num_resources);
+
+    // Input number of instances for each resource type
+    int available[MAX_RESOURCES];
+    printf("Enter the number of instances for each resource type:\n");
+    for (int i = 0; i < num_resources; i++) {
+        printf("Resource %d: ", i);
+        scanf("%d", &available[i]);
+    }
+
+    // Input number of processes
+    printf("Enter the number of processes: ");
+    scanf("%d", &num_processes);
+
+    // Input allocation matrix
+    int allocation[MAX_PROCESSES][MAX_RESOURCES];
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i);
+        for (int j = 0; j < num_resources; j++) {
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Input maximum requirement matrix
+    int max[MAX_PROCESSES][MAX_RESOURCES];
+    printf("Enter the maximum requirement matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i);
+        for (int j = 0; j < num_resources; j++) {
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Calculate and display the need matrix
+    int need[MAX_PROCESSES][MAX_RESOURCES];
+    calculateNeedMatrix(need, max, allocation, num_processes, num_resources);
+    printf("\nNeed Matrix:\n");
+    for (int i = 0; i < num_processes; i++) {
+        printf("Process %d: ", i);
+        for (int j = 0; j < num_resources; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Input request for a process
+    int process_id;
+    printf("\nEnter the process ID (0 to %d) for which you want to make a request: ", num_processes - 1);
+    scanf("%d", &process_id);
+    if (process_id < 0 || process_id >= num_processes) {
+        printf("Invalid process ID!\n");
+        return 1;
+    }
+
+    int request[MAX_RESOURCES];
+    printf("Enter the request vector for process %d:\n", process_id);
+    for (int i = 0; i < num_resources; i++) {
+        scanf("%d", &request[i]);
+    }
+
+    // Check if the request can be granted immediately
+    if (checkRequest(request, need[process_id], available, num_resources)) {
+        printf("Request can be granted immediately.\n");
+    } else {
+        printf("Request cannot be granted immediately.\n");
+    }
+
+    return 0;
+}
+
+// Function to calculate the need matrix
+void calculateNeedMatrix(int need[][MAX_RESOURCES], int max[][MAX_RESOURCES], int allocation[][MAX_RESOURCES], int num_processes, int num_resources) {
+    for (int i = 0; i < num_processes; i++) {
+        for (int j = 0; j < num_resources; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+// Function to check if a request can be granted immediately
+bool checkRequest(int request[], int need[], int available[], int num_resources) {
+    for (int i = 0; i < num_resources; i++) {
+        if (request[i] > need[i] || request[i] > available[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+-----------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 1000
+
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+void sstf(int requests[], int n, int head) {
+    int total_head_movements = 0;
+    int min_pos = 0, max_pos = 199; // Assuming disk range from 0 to 199
+
+    printf("Order of service: ");
+    // Traverse all requests
+    for (int i = 0; i < n; i++) {
+        int min_distance = max_pos - min_pos + 1; // Initialize with the maximum possible distance
+        int min_index = -1;
+
+        // Find the request with the shortest seek time
+        for (int j = 0; j < n; j++) {
+            if (requests[j] == -1) continue; // Skip already served requests
+
+            int distance = abs_diff(head, requests[j]);
+            if (distance < min_distance) {
+                min_distance = distance;
+                min_index = j;
+            }
+        }
+
+        // Serve the request with the shortest seek time
+        printf("%d ", requests[min_index]);
+        total_head_movements += min_distance;
+        head = requests[min_index];
+        requests[min_index] = -1; // Mark as served
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, head;
+    int requests[MAX_REQUESTS];
+
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &head);
+
+    printf("\n");
+
+    sstf(requests, total_blocks, head);
+
+    return 0;
+}
+gcc -o disk_scheduler disk_scheduler.c
+./disk_scheduler
+-------------------------------------------------------------------------------------
+Slip 24
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_sum = 0;
+    int global_sum = 0;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator differently on each process
+    srand(rank);
+
+    // Generate random numbers and calculate local sum of odd numbers
+    int numbers[ARRAY_SIZE];
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+        if (numbers[i] % 2 != 0) { // Check if number is odd
+            local_sum += numbers[i];
+        }
+    }
+
+    // Sum up all local sums across processes
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Print global sum by rank 0
+    if (rank == 0) {
+        printf("Global Sum of Odd Numbers: %d\n", global_sum);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+mpicc mpi_odd_sum.c -o mpi_odd_sum
+mpirun -np 4 ./mpi_odd_sum
+-------------------------------------------------------------------------------------------------------
+#include <stdio.h>
+
+#define MAX_PROCESSES 5
+#define MAX_RESOURCES 4
+
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int max[MAX_PROCESSES][MAX_RESOURCES];
+int available[MAX_RESOURCES];
+
+int need[MAX_PROCESSES][MAX_RESOURCES]; // Need matrix
+
+int work[MAX_RESOURCES]; // Work array for Banker's algorithm
+int finish[MAX_PROCESSES] = {0}; // Finish array for Banker's algorithm
+int safe_sequence[MAX_PROCESSES];
+
+// Function prototypes
+void calculate_need_matrix();
+int check_safety();
+
+int main() {
+    // Accept allocation matrix from user
+    printf("Enter the allocation matrix:\n");
+    for (int i = 0; i < MAX_PROCESSES; i++) {
+        printf("Process P%d: ", i);
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Accept maximum matrix from user
+    printf("Enter the maximum matrix:\n");
+    for (int i = 0; i < MAX_PROCESSES; i++) {
+        printf("Process P%d: ", i);
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Accept available resources from user
+    printf("Enter the available resources: ");
+    for (int i = 0; i < MAX_RESOURCES; i++) {
+        scanf("%d", &available[i]);
+    }
+
+    // Calculate the need matrix
+    calculate_need_matrix();
+
+    // Display the need matrix
+    printf("\nNeed Matrix:\n");
+    for (int i = 0; i < MAX_PROCESSES; i++) {
+        printf("P%d: ", i);
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Check if the system is in a safe state
+    if (check_safety()) {
+        printf("\nThe system is in a safe state.\n");
+        printf("Safe sequence: ");
+        for (int i = 0; i < MAX_PROCESSES; i++) {
+            printf("P%d ", safe_sequence[i]);
+        }
+        printf("\n");
+    } else {
+        printf("\nThe system is not in a safe state.\n");
+    }
+
+    return 0;
+}
+
+// Function to calculate the need matrix
+void calculate_need_matrix() {
+    for (int i = 0; i < MAX_PROCESSES; i++) {
+        for (int j = 0; j < MAX_RESOURCES; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+// Function to check if the system is in a safe state
+int check_safety() {
+    int count = 0;
+    int safe = 0;
+    for (int i = 0; i < MAX_RESOURCES; i++) {
+        work[i] = available[i];
+    }
+
+    while (count < MAX_PROCESSES) {
+        int found = 0;
+        for (int i = 0; i < MAX_PROCESSES; i++) {
+            if (finish[i] == 0) {
+                int j;
+                for (j = 0; j < MAX_RESOURCES; j++) {
+                    if (need[i][j] > work[j]) {
+                        break;
+                    }
+                }
+                if (j == MAX_RESOURCES) {
+                    for (int k = 0; k < MAX_RESOURCES; k++) {
+                        work[k] += allocation[i][k];
+                    }
+                    safe_sequence[safe++] = i;
+                    finish[i] = 1;
+                    found = 1;
+                    count++;
+                }
+            }
+        }
+        if (!found) {
+            break;
+        }
+    }
+
+    return (count == MAX_PROCESSES) ? 1 : 0;
+}
+---------------------------------------------------------------------------------------------------
+Slip 25
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to perform LOOK disk scheduling algorithm
+void look(int disk[], int num_requests, int start_head, int direction) {
+    int total_head_movements = 0;
+    int current_head = start_head;
+    int min_cylinder = 0;
+    int max_cylinder = 199; // Assuming the disk has cylinders from 0 to 199
+
+    // Sort disk requests
+    for (int i = 0; i < num_requests - 1; i++) {
+        for (int j = 0; j < num_requests - i - 1; j++) {
+            if (disk[j] > disk[j + 1]) {
+                int temp = disk[j];
+                disk[j] = disk[j + 1];
+                disk[j + 1] = temp;
+            }
+        }
+    }
+
+    // Determine scan direction
+    int scan_direction = direction == 0 ? -1 : 1; // -1 for left, 1 for right
+
+    // Look in the given direction
+    printf("Order of serving requests: ");
+    if (scan_direction == -1) { // Look towards smaller cylinder numbers (left)
+        for (int i = num_requests - 1; i >= 0; i--) {
+            if (disk[i] <= current_head) {
+                printf("%d ", disk[i]);
+                total_head_movements += abs(current_head - disk[i]);
+                current_head = disk[i];
+            }
+        }
+        for (int i = 0; i < num_requests; i++) {
+            if (disk[i] >= current_head) {
+                printf("%d ", disk[i]);
+                total_head_movements += abs(current_head - disk[i]);
+                current_head = disk[i];
+            }
+        }
+    } else { // Look towards larger cylinder numbers (right)
+        for (int i = 0; i < num_requests; i++) {
+            if (disk[i] >= current_head) {
+                printf("%d ", disk[i]);
+                total_head_movements += abs(current_head - disk[i]);
+                current_head = disk[i];
+            }
+        }
+        for (int i = num_requests - 1; i >= 0; i--) {
+            if (disk[i] <= current_head) {
+                printf("%d ", disk[i]);
+                total_head_movements += abs(current_head - disk[i]);
+                current_head = disk[i];
+            }
+        }
+    }
+    printf("\nTotal number of head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int num_requests;
+    int start_head;
+    int direction;
+    
+    // Input total number of disk blocks
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &num_requests);
+
+    // Input disk requests
+    int disk[num_requests];
+    printf("Enter the disk request string:\n");
+    for (int i = 0; i < num_requests; i++) {
+        scanf("%d", &disk[i]);
+    }
+
+    // Input start head position
+    printf("Enter the start head position: ");
+    scanf("%d", &start_head);
+
+    // Input direction (0 for left, 1 for right)
+    printf("Enter the direction (0 for left, 1 for right): ");
+    scanf("%d", &direction);
+
+    // Perform LOOK algorithm
+    look(disk, num_requests, start_head, direction);
+
+    return 0;
+}
+------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_BLOCKS 1000
+
+int allocated_blocks[MAX_BLOCKS] = {0}; // 0 for free, 1 for allocated
+
+// Linked List Node Structure
+typedef struct Node {
+    int block_number;
+    struct Node *next;
+} Node;
+
+Node *directory = NULL; // Directory head pointer
+
+// Function prototypes
+void show_bit_vector(int n);
+void create_new_file(int n);
+void show_directory();
+
+int main() {
+    int n, choice;
+    
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &n);
+
+    srand(time(NULL)); // Seed for randomization
+
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                show_bit_vector(n);
+                break;
+            case 2:
+                create_new_file(n);
+                break;
+            case 3:
+                show_directory();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
+        }
+    }
+
+    return 0;
+}
+
+// Function to display the bit vector (allocated/free blocks)
+void show_bit_vector(int n) {
+    printf("Bit Vector (Allocated: 1, Free: 0):\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", allocated_blocks[i]);
+    }
+    printf("\n");
+}
+
+// Function to create a new file and update the directory
+void create_new_file(int n) {
+    int block_number = rand() % n; // Randomly select a block for the file
+    if (allocated_blocks[block_number] == 0) {
+        allocated_blocks[block_number] = 1; // Mark the block as allocated
+
+        // Update directory
+        Node *new_node = (Node *)malloc(sizeof(Node));
+        new_node->block_number = block_number;
+        new_node->next = NULL;
+
+        if (directory == NULL) {
+            directory = new_node;
+        } else {
+            Node *temp = directory;
+            while (temp->next != NULL) {
+                temp = temp->next;
+            }
+            temp->next = new_node;
+        }
+
+        printf("New file created at block %d.\n", block_number);
+    } else {
+        printf("Block %d is already allocated. Cannot create new file.\n", block_number);
+    }
+}
+
+// Function to display the directory
+void show_directory() {
+    printf("Directory:\n");
+    if (directory == NULL) {
+        printf("Empty\n");
+    } else {
+        Node *temp = directory;
+        while (temp != NULL) {
+            printf("%d ", temp->block_number);
+            temp = temp->next;
+        }
+        printf("\n");
+    }
+}
+------------------------------------------------------------------------------------
+Slip 26
+#include <stdio.h>
+#include <stdbool.h>
+
+#define NUM_PROCESSES 5
+#define NUM_RESOURCES 4
+
+// Function prototypes
+void calculateNeedMatrix(int need[][NUM_RESOURCES], int allocation[][NUM_RESOURCES], int max[][NUM_RESOURCES]);
+bool isSafeState(int available[], int max[][NUM_RESOURCES], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES], int safe_sequence[]);
+
+int main() {
+    // Define the allocation matrix
+    int allocation[NUM_PROCESSES][NUM_RESOURCES];
+    
+    // Input allocation matrix
+    printf("Enter the allocation matrix (%d x %d):\n", NUM_PROCESSES, NUM_RESOURCES);
+    for (int i = 0; i < NUM_PROCESSES; i++) {
+        printf("Process P%d: ", i);
+        for (int j = 0; j < NUM_RESOURCES; j++) {
+            scanf("%d", &allocation[i][j]);
+        }
+    }
+
+    // Define the maximum matrix
+    int max[NUM_PROCESSES][NUM_RESOURCES];
+    
+    // Input maximum matrix
+    printf("Enter the maximum matrix (%d x %d):\n", NUM_PROCESSES, NUM_RESOURCES);
+    for (int i = 0; i < NUM_PROCESSES; i++) {
+        printf("Process P%d: ", i);
+        for (int j = 0; j < NUM_RESOURCES; j++) {
+            scanf("%d", &max[i][j]);
+        }
+    }
+
+    // Define the available resources
+    int available[NUM_RESOURCES];
+    
+    // Input available resources
+    printf("Enter the available resources (%d): ", NUM_RESOURCES);
+    for (int i = 0; i < NUM_RESOURCES; i++) {
+        scanf("%d", &available[i]);
+    }
+
+    // Initialize the need matrix
+    int need[NUM_PROCESSES][NUM_RESOURCES];
+
+    // Calculate and display the need matrix
+    calculateNeedMatrix(need, allocation, max);
+    printf("\nNeed Matrix:\n");
+    for (int i = 0; i < NUM_PROCESSES; i++) {
+        printf("P%d: ", i);
+        for (int j = 0; j < NUM_RESOURCES; j++) {
+            printf("%d ", need[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Check if the system is in a safe state and display the safe sequence
+    int safe_sequence[NUM_PROCESSES];
+    if (isSafeState(available, max, allocation, need, safe_sequence)) {
+        printf("\nSystem is in a safe state.\nSafe sequence: ");
+        for (int i = 0; i < NUM_PROCESSES; i++) {
+            printf("P%d ", safe_sequence[i]);
+        }
+        printf("\n");
+    } else {
+        printf("\nSystem is not in a safe state.\n");
+    }
+
+    return 0;
+}
+
+// Function to calculate the need matrix
+void calculateNeedMatrix(int need[][NUM_RESOURCES], int allocation[][NUM_RESOURCES], int max[][NUM_RESOURCES]) {
+    for (int i = 0; i < NUM_PROCESSES; i++) {
+        for (int j = 0; j < NUM_RESOURCES; j++) {
+            need[i][j] = max[i][j] - allocation[i][j];
+        }
+    }
+}
+
+// Function to check if the system is in a safe state
+bool isSafeState(int available[], int max[][NUM_RESOURCES], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES], int safe_sequence[]) {
+    bool finish[NUM_PROCESSES] = {false};
+    int work[NUM_RESOURCES];
+    for (int i = 0; i < NUM_RESOURCES; i++) {
+        work[i] = available[i];
+    }
+
+    int count = 0;
+    while (count < NUM_PROCESSES) {
+        bool found = false;
+        for (int i = 0; i < NUM_PROCESSES; i++) {
+            if (!finish[i]) {
+                int j;
+                for (j = 0; j < NUM_RESOURCES; j++) {
+                    if (need[i][j] > work[j]) {
+                        break;
+                    }
+                }
+                if (j == NUM_RESOURCES) {
+                    for (int k = 0; k < NUM_RESOURCES; k++) {
+                        work[k] += allocation[i][k];
+                    }
+                    safe_sequence[count++] = i;
+                    finish[i] = true;
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            return false; // No safe sequence found
+        }
+    }
+    return true; // Safe sequence found
+}
+
+------------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to calculate the total head movements
+int calculate_head_movements(int requests[], int n, int start_head) {
+    int total_head_movements = 0;
+    int current_head = start_head;
+
+    // Traverse all requests
+    for (int i = 0; i < n; i++) {
+        total_head_movements += abs(requests[i] - current_head);
+        current_head = requests[i];
+    }
+
+    return total_head_movements;
+}
+
+int main() {
+    int total_blocks, start_head;
+    int *requests;
+    
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    // Dynamically allocate memory for requests
+    requests = (int *)malloc(total_blocks * sizeof(int));
+
+    if (requests == NULL) {
+        printf("Memory allocation failed.\n");
+        return 1;
+    }
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &start_head);
+
+    printf("\n");
+
+    // Calculate total head movements
+    int total_head_movements = calculate_head_movements(requests, total_blocks, start_head);
+
+    // Display the list of requests
+    printf("Order of service: ");
+    for (int i = 0; i < total_blocks; i++) {
+        printf("%d ", requests[i]);
+    }
+    printf("\n");
+
+    // Display total head movements
+    printf("Total head movements: %d\n", total_head_movements);
+
+    // Free dynamically allocated memory
+    free(requests);
+
+    return 0;
+}
+----------------------------------------------------------------------------------------------------------------
+Slip 27
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function prototypes
+void LOOK(int request[], int n, int head_position, char direction);
+
+int main() {
+    int total_blocks, head_position;
+    char direction;
+    
+    // Input total number of disk blocks
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    // Input disk request string
+    printf("Enter the disk request string (comma separated): ");
+    int request[total_blocks];
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &request[i]);
+    }
+
+    // Input current head position
+    printf("Enter the starting head position: ");
+    scanf("%d", &head_position);
+
+    // Input direction
+    printf("Enter the direction (L for Left, R for Right): ");
+    scanf(" %c", &direction);
+
+    // Perform LOOK algorithm and display the result
+    LOOK(request, total_blocks, head_position, direction);
+
+    return 0;
+}
+
+// Function to sort an array in ascending order
+void sort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Function to find the index of the closest element in the array
+int findClosest(int arr[], int n, int target) {
+    if (target <= arr[0]) return 0;
+    if (target >= arr[n - 1]) return n - 1;
+
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = (left + right) / 2;
+        if (arr[mid] == target) return mid;
+        else if (arr[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return (arr[left] - target < target - arr[right]) ? left : right;
+}
+
+// Function to simulate LOOK disk scheduling algorithm
+void LOOK(int request[], int n, int head_position, char direction) {
+    int total_head_movements = 0;
+    sort(request, n); // Sort the request array
+    
+    int index = findClosest(request, n, head_position); // Find the index of the closest request
+    if (direction == 'L') {
+        // Move left
+        for (int i = index; i >= 0; i--) {
+            printf("%d ", request[i]);
+            total_head_movements += abs(request[i] - head_position);
+            head_position = request[i];
+        }
+        for (int i = index + 1; i < n; i++) {
+            printf("%d ", request[i]);
+            total_head_movements += abs(request[i] - head_position);
+            head_position = request[i];
+        }
+    } else if (direction == 'R') {
+        // Move right
+        for (int i = index; i < n; i++) {
+            printf("%d ", request[i]);
+            total_head_movements += abs(request[i] - head_position);
+            head_position = request[i];
+        }
+        for (int i = index - 1; i >= 0; i--) {
+            printf("%d ", request[i]);
+            total_head_movements += abs(request[i] - head_position);
+            head_position = request[i];
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+--------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int local_min, global_min;
+    int numbers[ARRAY_SIZE];
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Initialize random numbers
+    srand(rank); // Seed the random number generator with rank
+
+    // Generate random numbers
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand();
+    }
+
+    // Calculate local minimum
+    local_min = numbers[0];
+    for (int i = 1; i < ARRAY_SIZE; i++) {
+        if (numbers[i] < local_min) {
+            local_min = numbers[i];
+        }
+    }
+
+    // Reduce to find global minimum
+    MPI_Reduce(&local_min, &global_min, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
+
+    if (rank == 0) {
+        printf("Global minimum: %d\n", global_min);
+    }
+
+    MPI_Finalize();
+
+    return 0;
+}
+mpicc mpi_min.c -o mpi_min
+mpirun -np 4 ./mpi_min
+-----------------------------------------------------------------------------------
+Slip 28
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function prototypes
+void CLOOK(int request[], int n, int head_position, char direction);
+
+int main() {
+    int total_blocks, head_position;
+    char direction;
+    
+    // Input total number of disk blocks
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    // Input disk request string
+    printf("Enter the disk request string (comma separated): ");
+    int request[total_blocks];
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &request[i]);
+    }
+
+    // Input current head position
+    printf("Enter the starting head position: ");
+    scanf("%d", &head_position);
+
+    // Input direction
+    printf("Enter the direction (L for Left, R for Right): ");
+    scanf(" %c", &direction);
+
+    // Perform C-LOOK algorithm and display the result
+    CLOOK(request, total_blocks, head_position, direction);
+
+    return 0;
+}
+
+// Function to sort an array in ascending order
+void sort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Function to simulate C-LOOK disk scheduling algorithm
+void CLOOK(int request[], int n, int head_position, char direction) {
+    int total_head_movements = 0;
+    sort(request, n); // Sort the request array
+    
+    int index = 0;
+    // Find the index of the closest request larger than the head position
+    while (index < n && request[index] < head_position) {
+        index++;
+    }
+
+    if (direction == 'L') {
+        // Move left
+        for (int i = index - 1; i >= 0; i--) {
+            printf("%d ", request[i]);
+            total_head_movements += abs(request[i] - head_position);
+            head_position = request[i];
+        }
+        for (int i = n - 1; i >= index; i--) {
+            printf("%d ", request[i]);
+            total_head_movements += abs(request[i] - head_position);
+            head_position = request[i];
+        }
+    } else if (direction == 'R') {
+        // Move right
+        for (int i = index; i < n; i++) {
+            printf("%d ", request[i]);
+            total_head_movements += abs(request[i] - head_position);
+            head_position = request[i];
+        }
+        for (int i = 0; i < index; i++) {
+            printf("%d ", request[i]);
+            total_head_movements += abs(request[i] - head_position);
+            head_position = request[i];
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+-----------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int local_sum = 0, global_sum = 0;
+    int numbers[ARRAY_SIZE];
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Initialize random numbers
+    srand(rank); // Seed the random number generator with rank
+
+    // Generate random numbers
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 100; // Generate random numbers between 0 and 99
+    }
+
+    // Calculate local sum
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        local_sum += numbers[i];
+    }
+
+    // Reduce to find global sum
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    if (rank == 0) {
+        printf("Global sum: %d\n", global_sum);
+    }
+
+    MPI_Finalize();
+
+    return 0;
+}
+mpicc mpi_sum.c -o mpi_sum
+mpirun -np 4 ./mpi_sum
+----------------------------------------------------------------------------------------
+Slip 29
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_sum = 0;
+    int global_sum = 0;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers and calculate local sum of even numbers
+    int numbers[ARRAY_SIZE];
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+        if (numbers[i] % 2 == 0) {
+            local_sum += numbers[i];
+        }
+    }
+
+    // Sum local sums using MPI_Reduce
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    // Print global sum by rank 0
+    if (rank == 0) {
+        printf("Global Sum of even numbers: %d\n", global_sum);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+
+-------------------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to sort the request array in ascending order
+void sort_requests(int requests[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (requests[j] > requests[j + 1]) {
+                int temp = requests[j];
+                requests[j] = requests[j + 1];
+                requests[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Function to simulate disk scheduling using C-LOOK algorithm
+void c_look(int requests[], int n, int start_head, int direction) {
+    int total_head_movements = 0;
+    int current_head = start_head;
+    int previous_head = start_head;
+
+    // Sort requests
+    sort_requests(requests, n);
+
+    // Move head to the first request
+    if (direction == 0) { // Right
+        for (int i = 0; i < n; i++) {
+            if (requests[i] >= start_head) {
+                current_head = requests[i];
+                break;
+            }
+        }
+    } else { // Left
+        for (int i = n - 1; i >= 0; i--) {
+            if (requests[i] <= start_head) {
+                current_head = requests[i];
+                break;
+            }
+        }
+    }
+
+    // Calculate total head movements
+    for (int i = 0; i < n; i++) {
+        total_head_movements += abs(current_head - previous_head);
+        printf("%d ", current_head);
+        previous_head = current_head;
+        if (direction == 0) { // Right
+            current_head++;
+            if (current_head > requests[n - 1]) {
+                break;
+            }
+        } else { // Left
+            current_head--;
+            if (current_head < requests[0]) {
+                break;
+            }
+        }
+    }
+
+    printf("\nTotal head movements: %d\n", total_head_movements);
+}
+
+int main() {
+    int total_blocks, start_head, direction;
+    
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    int *requests = (int *)malloc(total_blocks * sizeof(int));
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &start_head);
+
+    printf("Enter the direction (0 for right, 1 for left): ");
+    scanf("%d", &direction);
+
+    printf("Order of service: ");
+    c_look(requests, total_blocks, start_head, direction);
+
+    free(requests);
+
+    return 0;
+}
+---------------------------------------------------------------------------------------------------
+Slip 30
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <mpi.h>
+
+#define ARRAY_SIZE 1000
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int i;
+    int local_min = INT_MAX;
+    int global_min;
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    // Seed random number generator
+    srand(rank);
+
+    // Generate random numbers and find local minimum
+    int numbers[ARRAY_SIZE];
+    for (i = 0; i < ARRAY_SIZE; i++) {
+        numbers[i] = rand() % 1000; // Generating numbers between 0 and 999
+        if (numbers[i] < local_min) {
+            local_min = numbers[i];
+        }
+    }
+
+    // Find global minimum using MPI_Reduce
+    MPI_Reduce(&local_min, &global_min, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
+
+    // Print global minimum by rank 0
+    if (rank == 0) {
+        printf("Global Min: %d\n", global_min);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
+-------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to calculate the total head movements
+int calculate_head_movements(int requests[], int n, int start_head) {
+    int total_head_movements = 0;
+    int current_head = start_head;
+
+    // Traverse all requests
+    for (int i = 0; i < n; i++) {
+        total_head_movements += abs(requests[i] - current_head);
+        current_head = requests[i];
+    }
+
+    return total_head_movements;
+}
+
+int main() {
+    int total_blocks, start_head;
+    
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &total_blocks);
+
+    int *requests = (int *)malloc(total_blocks * sizeof(int));
+
+    printf("Enter the disk request string (separated by spaces): ");
+    for (int i = 0; i < total_blocks; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    printf("Enter the starting head position: ");
+    scanf("%d", &start_head);
+
+    printf("\nOrder of service: ");
+    for (int i = 0; i < total_blocks; i++) {
+        printf("%d ", requests[i]);
+    }
+    printf("\n");
+
+    // Calculate total head movements
+    int total_head_movements = calculate_head_movements(requests, total_blocks, start_head);
+    printf("Total head movements: %d\n", total_head_movements);
+
+    free(requests);
+
+    return 0;
+}
+------------------------------------------END----------------------------------------------------------------------
+
