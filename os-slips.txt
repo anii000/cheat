@@ -1,0 +1,938 @@
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+1 
+ 
+ 
+Q.1  ) Write a C Menu driven Program to implement following functionality  
+a) Accept Available  
+b) Display Allocation, Max  
+c) Display the contents of need matrix  
+d) Display Available 
+ 
+Process Allocation Max Available 
+ A B C A B C A B C 
+P0 2 3 2 9 7 5 3 3 2 
+P1 4 0 0 5 2 2    
+P2 5 0 4 1 0 4    
+P3 4 3 3 4 4 4    
+P4 2 2 4 6 5 5    
+ 
+            [15] 
+ 
+Q.2 Write a simulation program for disk scheduling using FCFS algorithm. Accept 
+total number of disk blocks, disk request string, and current head position from the 
+user. Display the list of request in the order in which it is served. Also display the 
+total number of head moments.  
+      55, 58, 39, 18, 90, 160, 150, 38, 184 
+     Start Head Position: 50 
+   [15] 
+ 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a program to simulate Linked file allocation method. Assume disk with n 
+number of blocks. Give value of n as input. Randomly mark some block as allocated and 
+accordingly maintain the list of free blocks Write menu driver program with menu 
+options as mentioned below and implement each option. 
+• Show Bit Vector  
+• Create New File  
+• Show Directory  
+•  Exit 
+[15] 
+Q.2 Write an MPI program to calculate sum of randomly generated 1000 numbers 
+(stored in array) on a cluster        
+[15] 
+Q.3. Oral/Viva  
+[05] 
+
+2 
+
+
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+3 
+ 
+Q.1 Write a C program to simulate Banker’s algorithm for the purpose of deadlock 
+avoidance. Consider the following snapshot of system, A, B, C and D is the 
+resource type. 
+Process Allocation Max Available 
+ A B C D A B C D A B C D 
+P0 0 0 1 2 0 0 1 2 1 5 2 0 
+P1 1 0 0 0 1 7 5 0     
+P2 1 3 5 4 2 3 5 6     
+P3 0 6 3 2 0 6 5 2     
+P4 0 0 1 4 0 6 5 6     
+a) Calculate and display the content of need matrix? 
+b) Is the system in safe state? If display the safe sequence. 
+            [15] 
+ 
+Q.2 Write an MPI program to calculate sum and average of randomly generated 1000 
+numbers (stored in array) on a cluster      [15] 
+ 
+Q.3. Oral/Viva  [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+4 
+ 
+Q.1 Implement the Menu driven Banker's algorithm for accepting Allocation, Max 
+from user. 
+a) Accept Available 
+b) Display Allocation, Max 
+c) Find Need and display It, 
+d) Display Available  
+Consider the system with 3 resources types A,B, and C with 7,2,6        instances respectively. 
+Consider the following snapshot: 
+Process Allocation Request 
+ A B C A B C 
+P0 0 1 0 0 0 0 
+P1 4 0 0 5 2 2 
+P2 5 0 4 1 0 4 
+P3 4 3 3 4 4 4 
+P4 2 2 4 6 5 5 
+            [15] 
+Q.2 Write a simulation program for disk scheduling using SCAN algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total 
+number of head moments.  
+86, 147, 91, 170, 95, 130, 102, 70 
+Starting Head position= 125 
+Direction: Left 
+        [15] 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Consider a system with ‘m’ processes and ‘n’ resource types. Accept number of 
+instances for every resource type. For each process accept the allocation and maximum 
+requirement matrices. Write a program to display the contents of need matrix and to 
+check if the given request of a process can be granted immediately or not 
+[15] 
+Q.2 Write an MPI program to find the max number from randomly generated 1000 numbers 
+(stored in array) on a cluster (Hint: Use MPI_Reduce)  
+Q.3. Oral/Viva 
+[15] 
+[05] 
+5 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a program to simulate Linked file allocation method. Assume disk with n 
+number of blocks. Give value of n as input. Randomly mark some block as allocated and 
+accordingly maintain the list of free blocks Write menu driver program with menu 
+options as mentioned below and implement each option. 
+• Show Bit Vector  
+• Create New File  
+• Show Directory  
+•  Exit 
+[15] 
+Q.2 Write a simulation program for disk scheduling using C-SCAN algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments..      
+80, 150, 60,135, 40, 35, 170 
+Starting Head Position: 70 
+Direction: Right         
+Q.3. Oral/Viva 
+[15] 
+[05] 
+6 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+7 
+ 
+Q.1 Consider the following snapshot of the system. 
+Proces
+ s 
+Allocation Max Available 
+ A B C D A B C D A B C D 
+P0 2 0 0 1 4 2 1 2 3 3 2 1 
+P1 3 1 2 1 5 2 5 2     
+P2 2 1 0 3 2 3 1 6     
+P3 1 3 1 2 1 4 2 4     
+P4 1 4 3 2 3 6 6 5     
+Using Resource –Request algorithm to Check whether the current system is in safe state 
+or not            [15] 
+ 
+Q.2 Write a simulation program for disk scheduling using SCAN algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments. 
+82, 170, 43, 140, 24, 16, 190 
+  Starting Head Position: 50 
+  Direction: Right 
+    [15] 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a program to simulate Contiguous file allocation method. Assume disk with n 
+number of blocks. Give value of n as input. Randomly mark some block as allocated and 
+accordingly maintain the list of free blocks Write menu driver program with menu 
+options as mentioned above and implement each option. 
+• Show Bit Vector  
+• Create New File  
+• Show Directory  
+•  Exit           
+[15] 
+Q.2 Write a simulation program for disk scheduling using SSTF algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments. 
+186, 89, 44, 70, 102, 22, 51, 124 
+Start Head Position: 70  
+Q.3. Oral/Viva 
+[15] 
+[05] 
+8 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+9 
+ 
+Q.1. Consider the following snapshot of system, A, B, C, D is the resource type. 
+Proces
+ s 
+Allocation Max Available 
+ A B C D A B C D A B C D 
+P0 0 0 1 2 0 0 1 2 1 5 2 0 
+P1 1 0 0 0 1 7 5 0     
+P2 1 3 5 4 2 3 5 6     
+P3 0 6 3 2 0 6 5 2     
+P4 0 0 1 4 0 6 5 6     
+Using Resource –Request algorithm to Check whether the current system is in safe state 
+or not .           [15] 
+ 
+ 
+Q.2 Write a simulation program for disk scheduling using LOOK algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments.     [15] 
+          176, 79, 34, 60, 92, 11, 41, 114 
+          Starting Head Position: 65 
+ Direction: Left 
+Q.3. Oral/Viva  [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write an MPI program to calculate sum and average of randomly generated 1000 
+numbers (stored in array) on a cluster         
+[15] 
+Q.2 Write a simulation program for disk scheduling using C-SCAN algorithm. Accept 
+total number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total 
+number of head moments. 
+33, 99, 142, 52, 197, 79, 46, 65 
+Start Head Position: 72 
+Direction: Left  
+Q.3. Oral/Viva 
+[15] 
+[05] 
+10 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+11 
+ 
+Q.1 Write a C program to simulate Banker’s algorithm for the purpose of 
+deadlock avoidance.  the following snapshot of system, A, B, C and D are the 
+resource type. 
+Proces
+ s 
+Allocation Max Available 
+ A B C A B C A B C 
+P0 0 1 0 0 0 0 0 0 0 
+P1 2 0 0 2 0 2    
+P2 3 0 3 0 0 0    
+P3 2 1 1 1 0 0    
+P4 0 0 2 0 0 2    
+Implement the following Menu. 
+a) Accept Available  
+b) Display Allocation, Max  
+c) Display the contents of need matrix  
+ d) Display Available        [15] 
+ 
+ 
+Q.2 Write an MPI program to find the min number from randomly generated 1000 numbers 
+(stored in array) on a cluster (Hint: Use MPI_Reduce)  [15] 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write an MPI program to calculate sum and average randomly generated 1000 
+numbers (stored in array) on a cluster.       
+[15] 
+Q.2 Write a simulation program for disk scheduling using C-LOOK algorithm. Accept 
+total number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total number 
+of head moments. 
+23, 89, 132, 42, 187, 69, 36, 55 
+Start Head Position: 40 
+Direction: Right 
+Q.3. Oral/Viva  
+[15] 
+[05] 
+12 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+13 
+ 
+Q.1 Write a C program to simulate Banker’s algorithm for the purpose of deadlock 
+avoidance. The following snapshot of system, A, B, C and D are the resource type. 
+Proces
+ s 
+Allocation Max Available 
+ A B C A B C A B C 
+P0 0 1 0 0 0 0 0 0 0 
+P1 2 0 0 2 0 2    
+P2 3 0 3 0 0 0    
+P3 2 1 1 1 0 0    
+P4 0 0 2 0 0 2    
+a) Calculate and display the content of need matrix? 
+b) Is the system in safe state? If display the safe sequence.   [15] 
+ 
+ 
+Q.2 Write a simulation program for disk scheduling using SCAN algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments. 
+176, 79, 34, 60, 92, 11, 41, 114 
+Starting Head Position: 65 
+Direction: Left         [15] 
+ 
+ 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a program to simulate Sequential (Contiguous) file allocation method. 
+Assume disk with n number of blocks. Give value of n as input. Randomly mark some 
+block as allocated and accordingly maintain the list of free blocks Write menu driver 
+program with menu options as mentioned below and implement each option. 
+• Show Bit Vector  
+• Show Directory  
+•  Delete File  
+•  Exit           
+[15] 
+Q.2 Write a simulation program for disk scheduling using SSTF algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments.       
+55, 58, 39, 18, 90, 160, 150, 38, 184 
+Start Head Position: 50 
+Q.3. Oral/Viva 
+[15] 
+[05] 
+14 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a program to simulate Linked file allocation method. Assume disk with n 
+number of blocks. Give value of n as input. Randomly mark some block as allocated and 
+accordingly maintain the list of free blocks Write menu driver program with menu 
+options as mentioned below and implement each option. 
+• Show Bit Vector  
+• Create New File  
+• Show Directory  
+•  Exit           
+[15] 
+Q.2 Write a simulation program for disk scheduling using C-SCAN algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments..    
+[15] 
+80, 150, 60,135, 40, 35, 170 
+Starting Head Position: 70 
+Direction: Right 
+Q.3. Oral/Viva 
+[05] 
+15 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a program to simulate Sequential (Contiguous) file allocation method. 
+Assume disk with n number of blocks. Give value of n as input. Randomly mark some 
+block as allocated and accordingly maintain the list of free blocks Write menu driver 
+program with menu options as mentioned below and implement each option 
+• Show Bit Vector  
+• Create New File  
+• Show Directory  
+•  Exit           
+[15] 
+Q.2 Write an MPI program to find the min  number from randomly generated 1000 numbers 
+(stored in array) on a cluster (Hint: Use MPI_Reduce)              
+[15] 
+Q.3. Oral/Viva 
+[05] 
+16 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a program to simulate Indexed file allocation method. Assume disk with n 
+number of blocks. Give value of n as input. Randomly mark some block as allocated and 
+accordingly maintain the list of free blocks Write menu driver program with menu 
+options as mentioned above and implement each option. 
+• Show Bit Vector  
+• Show Directory  
+• Delete Already File 
+•  Exit           
+[15] 
+Q.2 Write a simulation program for disk scheduling using LOOK algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total number 
+of head moments. 
+23, 89, 132, 42, 187, 69, 36, 55 
+Start Head Position: 40 
+Direction: Left         
+Q.3. Oral/Viva 
+[15] 
+[05] 
+17 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a program to simulate Indexed file allocation method. Assume disk with n 
+number of blocks. Give value of n as input. Randomly mark some block as allocated and 
+accordingly maintain the list of free blocks Write menu driver program with menu 
+options as mentioned above and implement each option. 
+• Show Bit Vector  
+• Create New File  
+• Show Directory  
+• Delete File 
+•  Exit           
+[15] 
+Q.2 Write a simulation program for disk scheduling using SCAN algorithm. Accept 
+total number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total 
+number of head moments. 
+33, 99, 142, 52, 197, 79, 46, 65 
+Start Head Position: 72 
+Direction: Right   
+Q.3. Oral/Viva 
+[15] 
+[05] 
+18 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+19 
+ 
+ 
+Q.1 Write a C program to simulate Banker’s algorithm for the purpose of 
+deadlock avoidance. Consider the following snapshot of system, A, B, C and D 
+is the resource type. 
+Proces
+ s 
+Allocation Max Available 
+ A B C D A B C D A B C D 
+P0 0 3 2 4 6 5 4 4 3 4 4 2 
+P1 1 2 0 1 4 4 4 4     
+P2 0 0 0 0 0 0 1 2     
+P3 3 3 2 2 3 9 3 4     
+P4 1 4 3 2 2 5 3 3     
+P5 2 4 1 4 4 6 3 4     
+a) Calculate and display the content of need matrix? 
+b) Is the system in safe state? If display the safe sequence. 
+ 
+[15] 
+Q.2 Write a simulation program for disk scheduling using C-SCAN algorithm. Accept 
+total number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total number 
+of head moments. 
+23, 89, 132, 42, 187, 69, 36, 55 
+Start Head Position: 40 
+Direction: Left 
+            [15] 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a simulation program for disk scheduling using SCAN algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total number 
+of head moments. 
+33, 99, 142, 52, 197, 79, 46, 65 
+Start Head Position: 72 
+Direction: User defined          
+[15] 
+Q.2 Write an MPI program to find the max number from randomly generated 1000 numbers 
+(stored in array) on a cluster (Hint: Use MPI_Reduce)    
+[15] 
+Q.3. Oral/Viva 
+[05] 
+20 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a simulation program for disk scheduling using FCFS algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total number 
+of head moments.  
+55, 58, 39, 18, 90, 160, 150, 38, 184 
+Start Head Position: 50 
+[15] 
+Q.2 Write an MPI program to calculate sum of all even  randomly generated 1000 
+numbers (stored in array) on a cluster       
+[15] 
+Q.3. Oral/Viva 
+[05] 
+21 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write an MPI program to calculate sum of all odd randomly generated 1000 numbers 
+(stored in array) on a cluster.        
+[15] 
+Q.2 Write a program to simulate Sequential (Contiguous) file allocation method. 
+Assume disk with n number of blocks. Give value of n as input. Randomly mark some 
+block as allocated and accordingly maintain the list of free blocks Write menu driver 
+program with menu options as mentioned below and implement each option 
+• Show Bit Vector  
+• Delete already created file 
+• Exit           
+Q.3. Oral/Viva 
+[15] 
+[05] 
+22 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Consider a system with ‘m’ processes and ‘n’ resource types. Accept number of 
+instances for every resource type. For each process accept the allocation and maximum 
+requirement matrices. Write a program to display the contents of need matrix and to 
+check if the given request of a process can be granted immediately or not 
+[15] 
+Q.2 Write a simulation program for disk scheduling using SSTF algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total number 
+of head moments. 
+24, 90, 133, 43, 188, 70, 37, 55 
+Start Head Position: 58 
+Q.3. Oral/Viva 
+[15] 
+[05] 
+23 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+24 
+ 
+ 
+ 
+ 
+Q.1 Write an MPI program to calculate sum of all odd randomly generated 1000 numbers 
+(stored in array) on a cluster.        [15] 
+ 
+Q.2 Write a C program to simulate Banker’s algorithm for the purpose of deadlock 
+avoidance. The following snapshot of system, A, B, C and D are the resource type. 
+Proces
+ s 
+Allocation Max Available 
+ A B C A B C A B C 
+P0 0 1 0 0 0 0 0 0 0 
+P1 2 0 0 2 0 2    
+P2 3 0 3 0 0 0    
+P3 2 1 1 1 0 0    
+P4 0 0 2 0 0 2    
+ 
+a) Calculate and display the content of need matrix? 
+b) Is the system in safe state? If display the safe sequence.   [15] 
+ 
+ 
+ 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a simulation program for disk scheduling using LOOK algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total number 
+of head moments.  
+86, 147, 91, 170, 95, 130, 102, 70 
+Starting Head position= 125 
+Direction: User Defined 
+[15] 
+Q.2 Write a program to simulate Linked file allocation method. Assume disk with n 
+number of blocks. Give value of n as input. Randomly mark some block as allocated and 
+accordingly maintain the list of free blocks Write menu driver program with menu 
+options as mentioned below and implement each option. 
+• Show Bit Vector  
+• Create New File  
+• Show Directory  
+•  Exit               
+Q.3. Oral/Viva 
+[15] 
+[05] 
+25 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+26 
+ 
+ 
+Q.1 Write a C program to simulate Banker’s algorithm for the purpose of 
+deadlock avoidance. Consider the following snapshot of system, A, B, C and D 
+is the resource type. 
+Proces
+ s 
+Allocation Max Available 
+ A B C D A B C D A B C D 
+P0 0 0 1 2 0 0 1 2 1 5 2 0 
+P1 1 0 0 0 1 7 5 0     
+P2 1 3 5 4 2 3 5 6     
+P3 0 6 3 2 0 6 5 2     
+P4 0 0 1 4 0 6 5 6     
+a) Calculate and display the content of need matrix? 
+b) Is the system in safe state? If display the safe sequence.   [15] 
+ 
+ 
+Q.2 Write a simulation program for disk scheduling using FCFS algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. 
+Display the list of request in the order in which it is served. Also display the total number 
+of head moments.  
+      56, 59, 40, 19, 91, 161, 151, 39, 185 
+     Start Head Position: 48 
+   [15] 
+ 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               Max. Marks: 35 
+ 
+Duration: 3 Hrs Max. Marks: 35 
+ 
+ 
+27 
+ 
+ 
+ 
+Q.1 Write a simulation program for disk scheduling using LOOK algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments.      
+          176, 79, 34, 60, 92, 11, 41, 114 
+          Starting Head Position: 65 
+ Direction: Right 
+              
+            [15] 
+ 
+Q.2 Write an MPI program to find the min number from randomly generated 1000 numbers 
+(stored in array) on a cluster (Hint: Use MPI_Reduce)  [15] 
+ 
+Q.3. Oral/Viva [05] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write a simulation program for disk scheduling using C-LOOK algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments. 
+56, 59, 40, 19, 91, 161, 151, 39, 185 
+Start Head Position: 48 
+Direction: User Defined  
+[15] 
+Q.2 Write an MPI program to calculate sum of randomly generated 1000 numbers 
+(stored in array) on a cluster        
+[15] 
+Q.3. Oral/Viva  
+[05] 
+28 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write an MPI program to calculate sum of all even randomly generated 1000 numbers 
+(stored in array) on a cluster.        
+[15] 
+Q.2 Write a simulation program for disk scheduling using C-LOOK algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments..     
+80, 150, 60,135, 40, 35, 170 
+Starting Head Position: 70 
+Direction: Right 
+Q.3. Oral/Viva 
+[05] 
+[15] 
+29 
+Savitribai Phule Pune University 
+T.Y.B.Sc.(Computer Science) Practical Examination, March/October 
+(2019 Pattern) 
+CS-367 Lab Course-I Operating System-II 
+Duration: 3 Hrs               
+Duration: 3 Hrs 
+Max. Marks: 35 
+Max. Marks: 35 
+Q.1 Write an MPI program to find the min number from randomly generated 1000 numbers 
+(stored in array) on a cluster (Hint: Use MPI_Reduce)  
+[15] 
+Q.2 Write a simulation program for disk scheduling using FCFS algorithm. Accept total 
+number of disk blocks, disk request string, and current head position from the user. Display 
+the list of request in the order in which it is served. Also display the total number of head 
+moments.  
+65, 95, 30, 91, 18, 116, 142, 44, 168 
+Start Head Position: 52 
+Q.3. Oral/Viva 
+[15] 
+[05] 
+30 
