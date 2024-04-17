@@ -1,0 +1,2401 @@
+Slip 1
+<?php
+// Start the session
+session_start();
+
+// Check if the 'page_views' session variable is set
+if(isset($_SESSION['page_views'])){
+    $_SESSION['page_views']++; // Increment the page view count
+} else {
+    $_SESSION['page_views'] = 1; // Initialize the page view count to 1 if it's not set
+}
+
+// Display the number of page views
+echo "You have visited this page ".$_SESSION['page_views']." time(s)";
+
+?>
+------------------------------------------------------------------------------------------------
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Creating synthetic data for Position_Salaries
+positions = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).reshape(-1, 1)
+salaries = np.array([45000, 50000, 60000, 80000, 110000, 150000, 200000, 300000, 500000, 1000000]).reshape(-1, 1)
+data = pd.DataFrame(np.concatenate([positions, salaries], axis=1), columns=['Position', 'Salary'])
+
+# Displaying the data
+print("Position_Salaries dataset:")
+print(data)
+
+# Independent variable
+X = data.iloc[:, :-1].values
+
+# Target variable
+y = data.iloc[:, -1].values
+
+# Splitting the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Displaying the shapes of the training and testing sets
+print("Training set - X shape:", X_train.shape, "y shape:", y_train.shape)
+print("Testing set - X shape:", X_test.shape, "y shape:", y_test.shape)
+
+# Creating a Linear Regression model
+lin_reg = LinearRegression()
+
+# Fitting the model to the training data
+lin_reg.fit(X_train, y_train)
+
+# Printing the coefficients and intercept
+print("Coefficients:", lin_reg.coef_)
+print("Intercept:", lin_reg.intercept_)
+------------------------------------------------------------------------------------------------------
+Slip -2
+
+preferences.php
+
+<?php
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Set cookies for each preference
+    setcookie("font_style", $_POST['font_style'], time() + (86400 * 30), "/"); // 86400 = 1 day
+    setcookie("font_size", $_POST['font_size'], time() + (86400 * 30), "/");
+    setcookie("font_color", $_POST['font_color'], time() + (86400 * 30), "/");
+    setcookie("bg_color", $_POST['bg_color'], time() + (86400 * 30), "/");
+    // Redirect to the next page to display the selected settings
+    header("Location: display_settings.php");
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Preferences</title>
+</head>
+<body>
+    <h2>Set Your Preferences</h2>
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+        <label for="font_style">Font Style:</label>
+        <select name="font_style">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+        </select><br><br>
+        <label for="font_size">Font Size:</label>
+        <select name="font_size">
+            <option value="12px">12px</option>
+            <option value="16px">16px</option>
+            <option value="20px">20px</option>
+        </select><br><br>
+        <label for="font_color">Font Color:</label>
+        <input type="color" name="font_color"><br><br>
+        <label for="bg_color">Background Color:</label>
+        <input type="color" name="bg_color"><br><br>
+        <input type="submit" value="Save Preferences">
+    </form>
+</body>
+</html>
+ ------------------------
+display_settings.php
+
+<?php
+// Retrieve the preferences from cookies
+$fontStyle = $_COOKIE['font_style'] ?? 'Arial';
+$fontSize = $_COOKIE['font_size'] ?? '12px';
+$fontColor = $_COOKIE['font_color'] ?? '#000000'; // Default to black
+$bgColor = $_COOKIE['bg_color'] ?? '#ffffff'; // Default to white
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Settings</title>
+    <style>
+        body {
+            font-family: <?php echo $fontStyle; ?>;
+            font-size: <?php echo $fontSize; ?>;
+            color: <?php echo $fontColor; ?>;
+            background-color: <?php echo $bgColor; ?>;
+        }
+    </style>
+</head>
+<body>
+    <h2>Selected Settings</h2>
+    <p>Font Style: <?php echo $fontStyle; ?></p>
+    <p>Font Size: <?php echo $fontSize; ?></p>
+    <p>Font Color: <span style="color:<?php echo $fontColor; ?>"><?php echo $fontColor; ?></span></p>
+    <p>Background Color: <span style="background-color:<?php echo $bgColor; ?>"><?php echo $bgColor; ?></span></p>
+    <a href="apply_settings.php">Apply These Settings</a>
+</body>
+</html>
+---------------------------
+apply_settings.php
+
+<?php
+// Retrieve the preferences from cookies
+$fontStyle = $_COOKIE['font_style'] ?? 'Arial';
+$fontSize = $_COOKIE['font_size'] ?? '12px';
+$fontColor = $_COOKIE['font_color'] ?? '#000000'; // Default to black
+$bgColor = $_COOKIE['bg_color'] ?? '#ffffff'; // Default to white
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Settings</title>
+    <style>
+        body {
+            font-family: <?php echo $fontStyle; ?>;
+            font-size: <?php echo $fontSize; ?>;
+            color: <?php echo $fontColor; ?>;
+            background-color: <?php echo $bgColor; ?>;
+        }
+    </style>
+</head>
+<body>
+    <h2>New Settings Applied</h2>
+    <p>This page demonstrates the application of the new settings.</p>
+</body>
+</html>
+-----------------------------------------------------------------------------------------------
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Creating synthetic data for Salary
+np.random.seed(42)  # For reproducibility
+num_samples = 100
+age = np.random.randint(22, 65, num_samples)
+years_experience = np.random.randint(0, 43, num_samples)
+education_level = np.random.randint(0, 21, num_samples)  # Scale of 0-20 for simplicity
+salary = 5000 + (300 * age) + (1000 * years_experience) + (200 * education_level) + np.random.normal(0, 10000, num_samples)
+
+# Creating DataFrame
+data = pd.DataFrame({'Age': age, 'Years_Experience': years_experience, 'Education_Level': education_level, 'Salary': salary})
+
+# Displaying the data
+print("Salary dataset:")
+print(data.head())
+
+# Identifying independent and target variables
+X = data[['Age', 'Years_Experience', 'Education_Level']]  # Independent variables
+y = data['Salary']  # Target variable
+
+# Splitting the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Printing the shapes of the training and testing sets
+print("\nTraining set - X shape:", X_train.shape, "y shape:", y_train.shape)
+print("Testing set - X shape:", X_test.shape, "y shape:", y_test.shape)
+
+# Building a simple linear regression model
+lin_reg = LinearRegression()
+
+# Fitting the model to the training data
+lin_reg.fit(X_train, y_train)
+
+# Printing the coefficients and intercept
+print("\nCoefficients:", lin_reg.coef_)
+print("Intercept:", lin_reg.intercept_)
+---------------------------------------------------------------------------------------------------------------------
+Slip 3
+
+<?php
+session_start();
+
+// Define correct username and password
+$correct_username = "admin";
+$correct_password = "password";
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the entered username and password
+    $entered_username = $_POST['username'];
+    $entered_password = $_POST['password'];
+    
+    // Check if the entered username and password are correct
+    if ($entered_username === $correct_username && $entered_password === $correct_password) {
+        $_SESSION['authenticated'] = true; // Set authenticated session variable
+        header("Location: welcome.php"); // Redirect to welcome page
+        exit();
+    } else {
+        // Increment the login attempts
+        $_SESSION['login_attempts'] = isset($_SESSION['login_attempts']) ? $_SESSION['login_attempts'] + 1 : 1;
+        $login_attempts = $_SESSION['login_attempts'];
+
+        // Check if maximum attempts reached
+        if ($login_attempts >= 3) {
+            $error_message = "Maximum login attempts reached. Please try again later.";
+        } else {
+            $error_message = "Invalid username or password. Please try again.";
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <?php if(isset($error_message)) { ?>
+        <p style="color: red;"><?php echo $error_message; ?></p>
+    <?php } ?>
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+        <label for="username">Username:</label>
+        <input type="text" name="username" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" required><br><br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+-------------------------------------------------------------------------
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Creating synthetic data for the User dataset
+np.random.seed(42)
+num_users = 500
+user_id = np.arange(1, num_users + 1)
+gender = np.random.choice(['Male', 'Female'], size=num_users)
+age = np.random.randint(18, 65, size=num_users)
+estimated_salary = np.random.randint(20000, 150000, size=num_users)
+purchased = np.random.randint(0, 2, size=num_users)
+
+# Creating DataFrame
+user_data = pd.DataFrame({
+    'User_ID': user_id,
+    'Gender': gender,
+    'Age': age,
+    'Estimated_Salary': estimated_salary,
+    'Purchased': purchased
+})
+
+# Displaying the first few rows of the dataset
+print("User dataset:")
+print(user_data.head())
+
+# Identifying independent and target variables
+X = user_data[['Age', 'Estimated_Salary']]  # Independent variables
+y = user_data['Purchased']  # Target variable
+
+# Splitting the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Feature scaling
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Building a logistic regression model
+log_reg = LogisticRegression(random_state=42)
+
+# Fitting the model to the training data
+log_reg.fit(X_train_scaled, y_train)
+
+# Predicting on the test set
+y_pred = log_reg.predict(X_test_scaled)
+
+# Evaluating the model
+accuracy = accuracy_score(y_test, y_pred)
+print("\nAccuracy:", accuracy)
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+-----------------------------------------------------------------------------------------
+Slip 4
+
+employee_details.php
+
+<?php
+session_start();
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Store employee details in session variables
+    $_SESSION['employee_details'] = [
+        'Eno' => $_POST['Eno'],
+        'Ename' => $_POST['Ename'],
+        'Address' => $_POST['Address']
+    ];
+    
+    // Redirect to the second page to enter earning details
+    header("Location: earning_details.php");
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Details</title>
+</head>
+<body>
+    <h2>Employee Details</h2>
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+        <label for="Eno">Employee Number:</label>
+        <input type="text" name="Eno" required><br><br>
+        <label for="Ename">Employee Name:</label>
+        <input type="text" name="Ename" required><br><br>
+        <label for="Address">Address:</label>
+        <input type="text" name="Address" required><br><br>
+        <input type="submit" value="Next">
+    </form>
+</body>
+</html>
+ 
+-------------------------
+earning_details.php
+
+<?php
+session_start();
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Store earning details in session variables
+    $_SESSION['earning_details'] = [
+        'Basic' => $_POST['Basic'],
+        'DA' => $_POST['DA'],
+        'HRA' => $_POST['HRA']
+    ];
+    
+    // Redirect to the third page to print employee information
+    header("Location: print_info.php");
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earning Details</title>
+</head>
+<body>
+    <h2>Earning Details</h2>
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+        <label for="Basic">Basic:</label>
+        <input type="text" name="Basic" required><br><br>
+        <label for="DA">DA:</label>
+        <input type="text" name="DA" required><br><br>
+        <label for="HRA">HRA:</label>
+        <input type="text" name="HRA" required><br><br>
+        <input type="submit" value="Next">
+    </form>
+</body>
+</html>
+
+-----------------------------
+print_info.php
+
+<?php
+session_start();
+
+// Retrieve employee details from session
+$employee_details = $_SESSION['employee_details'] ?? [];
+// Retrieve earning details from session
+$earning_details = $_SESSION['earning_details'] ?? [];
+
+// Calculate total earnings
+$total = 0;
+foreach ($earning_details as $earning) {
+    $total += (int)$earning;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Information</title>
+</head>
+<body>
+    <h2>Employee Information</h2>
+    <p><strong>Employee Number:</strong> <?php echo $employee_details['Eno'] ?? ''; ?></p>
+    <p><strong>Employee Name:</strong> <?php echo $employee_details['Ename'] ?? ''; ?></p>
+    <p><strong>Address:</strong> <?php echo $employee_details['Address'] ?? ''; ?></p>
+    <p><strong>Basic:</strong> <?php echo $earning_details['Basic'] ?? ''; ?></p>
+    <p><strong>DA:</strong> <?php echo $earning_details['DA'] ?? ''; ?></p>
+    <p><strong>HRA:</strong> <?php echo $earning_details['HRA'] ?? ''; ?></p>
+    <p><strong>Total Earnings:</strong> <?php echo $total; ?></p>
+</body>
+</html>
+------------------------------------------------------------------------------------------------------
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Hypothetical fish species data
+np.random.seed(42)
+num_samples = 100
+length = np.random.uniform(10, 50, num_samples)
+width = np.random.uniform(5, 25, num_samples)
+height = np.random.uniform(3, 15, num_samples)
+weight = 500 + (length * 20) + (width * 10) + (height * 5) + np.random.normal(0, 50, num_samples)
+
+# Creating DataFrame
+fish_data = pd.DataFrame({'Length': length, 'Width': width, 'Height': height, 'Weight': weight})
+
+# Displaying the data
+print("Fish Species dataset:")
+print(fish_data.head())
+
+# Identifying independent and target variables
+X = fish_data[['Length', 'Width', 'Height']]  # Independent variables
+y = fish_data['Weight']  # Target variable
+
+# Splitting the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Building a simple linear regression model
+lin_reg = LinearRegression()
+
+# Fitting the model to the training data
+lin_reg.fit(X_train, y_train)
+
+# Predicting on the test set
+y_pred = lin_reg.predict(X_test)
+
+# Evaluating the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("\nMean Squared Error:", mse)
+print("R-squared:", r2)
+
+# Printing the coefficients and intercept
+print("\nCoefficients:", lin_reg.coef_)
+print("Intercept:", lin_reg.intercept_)
+---------------------------------------------------------------------------------------------------------------------------
+Slip 5
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Items>
+    <Item>
+        <Name>Laptop</Name>
+        <Rate>1000</Rate>
+        <Quantity>10</Quantity>
+    </Item>
+    <Item>
+        <Name>Mobile Phone</Name>
+        <Rate>500</Rate>
+        <Quantity>20</Quantity>
+    </Item>
+    <Item>
+        <Name>Television</Name>
+        <Rate>800</Rate>
+        <Quantity>15</Quantity>
+    </Item>
+    <Item>
+        <Name>Headphones</Name>
+        <Rate>50</Rate>
+        <Quantity>50</Quantity>
+    </Item>
+    <Item>
+        <Name>Tablet</Name>
+        <Rate>300</Rate>
+        <Quantity>30</Quantity>
+    </Item>
+</Items>
+----------------------------------------------------------------------------------------
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Load the Iris dataset
+iris = load_iris()
+
+# Creating DataFrame
+iris_df = pd.DataFrame(iris.data, columns=iris.feature_names)
+iris_df['Species'] = iris.target
+
+# Mapping target values to species names
+iris_df['Species'] = iris_df['Species'].map({0: 'Iris-setosa', 1: 'Iris-versicolor', 2: 'Iris-virginica'})
+
+# Viewing basic statistical details for each species
+species_stats = iris_df.groupby('Species').describe()
+print("Basic Statistical Details for each Species:")
+print(species_stats)
+
+# Features and target variable
+X = iris.data[:, :4]  # Features: sepal length, sepal width, petal length, petal width
+y = iris.target  # Target variable: species
+
+# Splitting the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Feature scaling
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Applying logistic regression
+log_reg = LogisticRegression(random_state=42, multi_class='auto', max_iter=1000)
+
+# Fitting the model to the training data
+log_reg.fit(X_train_scaled, y_train)
+
+# Predicting on the test set
+y_pred = log_reg.predict(X_test_scaled)
+
+# Calculating accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("\nAccuracy of the logistic regression model:", accuracy)
+
+------------------------------------------------------------------------------------------------------
+Slip 6
+
+Book.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<book>
+    <title>Harry Potter and the Philosopher's Stone</title>
+    <author>J.K. Rowling</author>
+    <genre>Fantasy</genre>
+    <price>20.00</price>
+    <publish_date>1997-06-26</publish_date>
+    <description>
+        The story follows a young wizard, Harry Potter, and his friends Hermione Granger and Ron Weasley,
+        who are students at Hogwarts School of Witchcraft and Wizardry.
+    </description>
+</book>
+-----------------
+<?php
+// Load the XML file into a SimpleXML object
+$book_xml = simplexml_load_file('book.xml');
+
+// Check if the XML file is loaded successfully
+if ($book_xml === false) {
+    die('Error loading XML file');
+}
+
+// Display attributes and elements
+echo "<h2>Book Details:</h2>";
+echo "<p><strong>Title:</strong> {$book_xml->title}</p>";
+echo "<p><strong>Author:</strong> {$book_xml->author}</p>";
+echo "<p><strong>Genre:</strong> {$book_xml->genre}</p>";
+echo "<p><strong>Price:</strong> {$book_xml->price}</p>";
+echo "<p><strong>Published Date:</strong> {$book_xml->publish_date}</p>";
+echo "<p><strong>Description:</strong> {$book_xml->description}</p>";
+?>
+----------------------------------------------------------------------------------------------
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Create the dataset
+def create_dataset():
+    num_transactions = int(input("Enter the number of transactions: "))
+    transactions = []
+    for i in range(num_transactions):
+        items = input(f"Enter items for transaction {i+1} separated by space: ").strip().split()
+        transactions.append(items)
+    df = pd.DataFrame({'Transaction': range(1, num_transactions + 1), 'Items': transactions})
+    return df
+
+# Step 2: Convert categorical values into numeric format
+def encode_items(items):
+    encoded_items = []
+    for item in items:
+        encoded_items.append(ord(item) - ord('A') + 1)  # Convert 'A', 'B', 'C', ... to 1, 2, 3, ...
+    return encoded_items
+
+def preprocess_dataset(df):
+    df['Items'] = df['Items'].apply(encode_items)
+    return df
+
+# Step 3: Apply Apriori algorithm
+def apply_apriori(df, min_sup):
+    # Convert the dataset into a one-hot encoded format
+    one_hot_encoded = pd.get_dummies(df['Items'].apply(pd.Series).stack(), prefix='Item').sum(level=0)
+    
+    # Apply Apriori algorithm
+    frequent_itemsets = apriori(one_hot_encoded, min_support=min_sup, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    
+    return frequent_itemsets, rules
+
+# Step 4: Get user input for dataset and min_sup
+df = create_dataset()
+df = preprocess_dataset(df)
+min_sup = float(input("Enter the minimum support value (between 0 and 1): "))
+
+# Apply Apriori algorithm
+frequent_itemsets, rules = apply_apriori(df, min_sup)
+
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+print("\nAssociation Rules:")
+print(rules)
+--------------------------------------------------------------------------------------------------------
+Slip 7
+
+<?php
+// Load the XML file
+$doc = new DOMDocument();
+$doc->load('Movie.xml');
+
+// Get all movie elements
+$movies = $doc->getElementsByTagName('MovieInfo');
+
+// Loop through each movie and print MovieTitle and ActorName
+echo "<h2>Movie Details:</h2>";
+foreach ($movies as $movie) {
+    $movieNo = $movie->getElementsByTagName('MovieNo')->item(0)->nodeValue;
+    $title = $movie->getElementsByTagName('MovieTitle')->item(0)->nodeValue;
+    $actorName = $movie->getElementsByTagName('ActorName')->item(0)->nodeValue;
+    $releaseYear = $movie->getElementsByTagName('ReleaseYear')->item(0)->nodeValue;
+    
+    echo "<p><strong>Movie Title:</strong> $title</p>";
+    echo "<p><strong>Actor Name:</strong> $actorName</p>";
+    echo "<hr>";
+}
+?>
+-------------------------------
+Movie.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Movies>
+    <MovieInfo>
+        <MovieNo>1</MovieNo>
+        <MovieTitle>The Shawshank Redemption</MovieTitle>
+        <ActorName>Tim Robbins</ActorName>
+        <ReleaseYear>1994</ReleaseYear>
+    </MovieInfo>
+    <MovieInfo>
+        <MovieNo>2</MovieNo>
+        <MovieTitle>The Godfather</MovieTitle>
+        <ActorName>Marlon Brando</ActorName>
+        <ReleaseYear>1972</ReleaseYear>
+    </MovieInfo>
+    <MovieInfo>
+        <MovieNo>3</MovieNo>
+        <MovieTitle>Pulp Fiction</MovieTitle>
+        <ActorName>John Travolta</ActorName>
+        <ReleaseYear>1994</ReleaseYear>
+    </MovieInfo>
+    <MovieInfo>
+        <MovieNo>4</MovieNo>
+        <MovieTitle>The Dark Knight</MovieTitle>
+        <ActorName>Christian Bale</ActorName>
+        <ReleaseYear>2008</ReleaseYear>
+    </MovieInfo>
+    <MovieInfo>
+        <MovieNo>5</MovieNo>
+        <MovieTitle>Forrest Gump</MovieTitle>
+        <ActorName>Tom Hanks</ActorName>
+        <ReleaseYear>1994</ReleaseYear>
+    </MovieInfo>
+</Movies>
+-----------------------------------------------------------------------------------------
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Download the Market Basket dataset and place it in the working directory
+
+# Step 2: Read the dataset and display its information
+def read_dataset(filename):
+    df = pd.read_csv(filename, header=None)
+    print("Dataset Information:")
+    print(df.info())
+    return df
+
+# Step 3: Preprocess the data
+def preprocess_data(df):
+    # Drop rows with any missing values
+    df.dropna(axis=0, inplace=True)
+    # Convert categorical values into numeric format
+    df_encoded = pd.get_dummies(df, prefix='', prefix_sep='')
+    return df_encoded
+
+# Step 4: Apply the Apriori algorithm
+def apply_apriori(df, min_sup):
+    # Apply Apriori algorithm
+    frequent_itemsets = apriori(df, min_support=min_sup, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    return frequent_itemsets, rules
+
+# Main function
+def main():
+    # Step 2: Read the dataset
+    filename = "Market_Basket_Dataset.csv"  # Replace with the actual filename
+    df = read_dataset(filename)
+
+    # Step 3: Preprocess the data
+    df_processed = preprocess_data(df)
+
+    # Step 4: Apply the Apriori algorithm
+    min_sup = 0.01  # Minimum support threshold
+    frequent_itemsets, rules = apply_apriori(df_processed, min_sup)
+
+    print("\nFrequent Itemsets:")
+    print(frequent_itemsets)
+    print("\nAssociation Rules:")
+    print(rules)
+
+if __name__ == "__main__":
+    main()
+-----------------------------------------------------------------------------------------------
+Slip 8
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Example</title>
+    <script>
+        function displayMessage() {
+            // Display message using alert box
+            alert('Exams are near, have you started preparing for?');
+            
+            // Accept two numbers from user using prompt
+            var number1 = prompt('Enter first number:');
+            var number2 = prompt('Enter second number:');
+            
+            // Convert input strings to numbers and calculate their sum
+            var sum = parseFloat(number1) + parseFloat(number2);
+            
+            // Display addition of two numbers using confirm box
+            confirm('The addition of ' + number1 + ' and ' + number2 + ' is: ' + sum);
+        }
+    </script>
+</head>
+<body>
+    <h1>JavaScript Example</h1>
+    <button onclick="displayMessage()">Display Message and Add Numbers</button>
+</body>
+</html>
+------------------------------------------------------------------------------------------------------
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Download the groceries dataset and place it in the working directory
+
+# Step 2: Read the dataset and display its information
+def read_dataset(filename):
+    df = pd.read_csv(filename)
+    print("Dataset Information:")
+    print(df.info())
+    return df
+
+# Step 3: Preprocess the data
+def preprocess_data(df):
+    # Drop rows with any missing values
+    df.dropna(axis=0, inplace=True)
+    # Convert categorical values into numeric format
+    df_encoded = pd.get_dummies(df, prefix='', prefix_sep='')
+    return df_encoded
+
+# Step 4: Apply the Apriori algorithm
+def apply_apriori(df, min_sup):
+    # Apply Apriori algorithm
+    frequent_itemsets = apriori(df, min_support=min_sup, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    return frequent_itemsets, rules
+
+# Main function
+def main():
+    # Step 2: Read the dataset
+    filename = "groceries.csv"  # Replace with the actual filename
+    df = read_dataset(filename)
+
+    # Step 3: Preprocess the data
+    df_processed = preprocess_data(df)
+
+    # Step 4: Apply the Apriori algorithm
+    min_sup = 0.01  # Minimum support threshold
+    frequent_itemsets, rules = apply_apriori(df_processed, min_sup)
+
+    print("\nFrequent Itemsets:")
+    print(frequent_itemsets)
+    print("\nAssociation Rules:")
+    print(rules)
+
+if __name__ == "__main__":
+    main()
+-----------------------------------------------------------------------------------------------
+Slip 9
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Form</title>
+    <script>
+        function validateForm() {
+            // Get the username and password input values
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // Regular expressions for validation
+            var usernameRegex = /^[a-zA-Z0-9_-]{3,16}$/; // Allows letters, numbers, underscores, and hyphens. Length between 3 and 16 characters.
+            var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // Requires at least one digit, one lowercase letter, one uppercase letter. Length between 6 and 20 characters.
+
+            // Validate username
+            if (!usernameRegex.test(username)) {
+                alert("Username must be between 3 and 16 characters long and can contain letters, numbers, underscores, and hyphens.");
+                return false; // Prevent form submission
+            }
+
+            // Validate password
+            if (!passwordRegex.test(password)) {
+                alert("Password must be between 6 and 20 characters long and contain at least one digit, one lowercase letter, and one uppercase letter.");
+                return false; // Prevent form submission
+            }
+
+            // If both username and password are valid, return true to allow form submission
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h2>Membership Form</h2>
+    <form onsubmit="return validateForm()">
+        <!-- Username and password inputs -->
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required><br><br>
+        <!-- Submit button -->
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+--------------------------------------------------------------------------------------------
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Create your own transactions dataset
+transactions = [
+    ['Milk', 'Bread', 'Eggs'],
+    ['Bread', 'Butter', 'Jam'],
+    ['Milk', 'Butter', 'Cheese'],
+    ['Bread', 'Eggs'],
+    ['Milk', 'Bread', 'Butter', 'Jam'],
+    ['Bread', 'Eggs', 'Cheese'],
+    ['Milk', 'Bread', 'Jam'],
+    ['Milk', 'Bread', 'Eggs', 'Butter', 'Cheese', 'Jam'],
+    ['Milk', 'Bread'],
+    ['Bread', 'Eggs', 'Butter']
+]
+
+# Convert transactions into DataFrame
+df = pd.DataFrame({'Transaction': transactions})
+
+# Step 2: Display information about the dataset
+def display_info(df):
+    print("Dataset Information:")
+    print(df.info())
+
+display_info(df)
+
+# Step 3: Preprocess the data
+def preprocess_data(df):
+    # Convert categorical values into numeric format
+    df_encoded = pd.get_dummies(df['Transaction'].apply(pd.Series).stack(), prefix='', prefix_sep='')
+    return df_encoded
+
+df_encoded = preprocess_data(df)
+
+# Step 4: Apply the Apriori algorithm
+def apply_apriori(df, min_sup):
+    # Apply Apriori algorithm
+    frequent_itemsets = apriori(df, min_support=min_sup, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    return frequent_itemsets, rules
+
+# Main function
+def main():
+    # Step 2: Display information about the dataset
+    display_info(df)
+
+    # Step 4: Apply the Apriori algorithm
+    min_sup = 0.2  # Minimum support threshold
+    frequent_itemsets, rules = apply_apriori(df_encoded, min_sup)
+
+    print("\nFrequent Itemsets:")
+    print(frequent_itemsets)
+    print("\nAssociation Rules:")
+    print(rules)
+
+if __name__ == "__main__":
+    main()
+------------------------------------------------------------------------------------------------------------
+Slip 10
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Text Before and After Paragraph</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Insert text before the paragraph
+            $("#insert-before-btn").click(function(){
+                $("#paragraph").before("<p>This text is inserted before the paragraph.</p>");
+            });
+
+            // Insert text after the paragraph
+            $("#insert-after-btn").click(function(){
+                $("#paragraph").after("<p>This text is inserted after the paragraph.</p>");
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Insert Text Before and After Paragraph</h2>
+    <p id="paragraph">This is a paragraph.</p>
+    <button id="insert-before-btn">Insert Before</button>
+    <button id="insert-after-btn">Insert After</button>
+</body>
+</html>
+------------------------------------------------------------------------------------------------------
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Create the dataset
+data = {
+    'Transaction': [1, 2, 3, 4, 5],
+    'Items': [['A', 'B', 'C'],
+              ['A', 'C', 'D'],
+              ['B', 'D'],
+              ['A', 'C'],
+              ['A', 'B', 'D']]
+}
+df = pd.DataFrame(data)
+
+# Step 2: Convert categorical values into numeric format
+def encode_items(items):
+    encoded_items = []
+    for item in items:
+        encoded_items.append(ord(item) - ord('A') + 1)  # Convert 'A', 'B', 'C', ... to 1, 2, 3, ...
+    return encoded_items
+
+df['Items'] = df['Items'].apply(encode_items)
+
+# Step 3: Apply Apriori algorithm
+def apply_apriori(df, min_sup):
+    # Convert the dataset into a one-hot encoded format
+    one_hot_encoded = pd.get_dummies(df['Items'].apply(pd.Series).stack(), prefix='Item').sum(level=0)
+    
+    # Apply Apriori algorithm
+    frequent_itemsets = apriori(one_hot_encoded, min_support=min_sup, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    
+    return frequent_itemsets, rules
+
+# Step 4: Repeat the process with different min_sup values
+min_sup_values = [0.2, 0.3, 0.4]
+for min_sup in min_sup_values:
+    print(f"\nMin support: {min_sup}")
+    frequent_itemsets, rules = apply_apriori(df, min_sup)
+    print("Frequent Itemsets:")
+    print(frequent_itemsets)
+    print("\nAssociation Rules:")
+    print(rules)
+---------------------------------------------------------------------------------------------------------------
+Slip 11
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <script>
+        function updateStyle() {
+            var studentName = document.getElementById("studentName").value;
+            var image = document.getElementById("changingImage");
+
+            if (studentName.trim() !== "") {
+                // If student name is present, change font color to red and font size to 18
+                document.getElementById("studentName").style.color = "red";
+                document.getElementById("studentName").style.fontSize = "18px";
+            } else {
+                // If student name is empty, display changing image
+                image.style.width = "200px"; // Initial width
+                image.onmouseover = function() {
+                    // Increase size on mouse hover
+                    image.style.width = "250px";
+                };
+                image.onmouseout = function() {
+                    // Reset size on mouse out
+                    image.style.width = "200px";
+                };
+                image.onclick = function() {
+                    // Double size on mouse click
+                    image.style.width = "400px";
+                };
+                image.onmouseup = function() {
+                    // Reset size on mouse up (after mouse click)
+                    image.style.width = "200px";
+                };
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Student Details</h2>
+    <label for="studentName">Student Name:</label>
+    <input type="text" id="studentName" onblur="updateStyle()" placeholder="Enter student name">
+    <br><br>
+    <img id="changingImage" src="https://via.placeholder.com/200" alt="Changing Image" onload="updateStyle()">
+</body>
+</html>
+----------------------------------------------------------------------------------------------------------------
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Create the dataset
+data = {
+    'Transaction': [1, 2, 3, 4, 5],
+    'Items': [['Milk', 'Bread', 'Eggs'],
+              ['Milk', 'Bread', 'Butter'],
+              ['Bread', 'Butter', 'Cheese'],
+              ['Milk', 'Eggs'],
+              ['Milk', 'Butter', 'Cheese']]
+}
+df = pd.DataFrame(data)
+
+# Step 2: Convert categorical values into numeric format
+def encode_items(items):
+    item_dict = {'Milk': 1, 'Bread': 2, 'Eggs': 3, 'Butter': 4, 'Cheese': 5}
+    encoded_items = [item_dict[item] for item in items]
+    return encoded_items
+
+df['Items'] = df['Items'].apply(encode_items)
+
+# Step 3: Apply Apriori algorithm
+def apply_apriori(df, min_sup):
+    # Convert the dataset into a one-hot encoded format
+    one_hot_encoded = pd.get_dummies(df['Items'].apply(pd.Series).stack(), prefix='Item').sum(level=0)
+    
+    # Apply Apriori algorithm
+    frequent_itemsets = apriori(one_hot_encoded, min_support=min_sup, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    
+    return frequent_itemsets, rules
+
+# Step 4: Repeat the process with different min_sup values
+min_sup_values = [0.2, 0.3, 0.4]
+for min_sup in min_sup_values:
+    print(f"\nMin support: {min_sup}")
+    frequent_itemsets, rules = apply_apriori(df, min_sup)
+    print("Frequent Itemsets:")
+    print(frequent_itemsets)
+    print("\nAssociation Rules:")
+    print(rules)
+---------------------------------------------------------------------------------------------------------------
+Slip 12
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Details</title>
+    <script>
+        function loadContacts() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var contactData = e.target.result;
+                    displayContacts(contactData);
+                };
+
+                reader.readAsText(file);
+            }
+        }
+
+        function displayContacts(contactData) {
+            var contactsArray = contactData.split('\n');
+            var tableHtml = '<table border="1"><tr><th>Sr No</th><th>Name</th><th>Residence Number</th><th>Mobile Number</th><th>Address</th></tr>';
+
+            contactsArray.forEach(function(contact) {
+                var contactInfo = contact.split(',');
+                if (contactInfo.length === 5) { // Ensure all fields are present
+                    tableHtml += '<tr>';
+                    contactInfo.forEach(function(info) {
+                        tableHtml += '<td>' + info.trim() + '</td>';
+                    });
+                    tableHtml += '</tr>';
+                }
+            });
+
+            tableHtml += '</table>';
+            document.getElementById('contactTable').innerHTML = tableHtml;
+        }
+    </script>
+</head>
+<body>
+    <h2>Contact Details</h2>
+    <input type="file" id="fileInput">
+    <button onclick="loadContacts()">Print Contacts</button>
+    <div id="contactTable"></div>
+</body>
+</html>
+----------
+contact.dat
+1,John Doe,1234567890,9876543210,123 Main St
+2,Jane Smith,2345678901,8765432109,456 Elm St
+3,Michael Johnson,3456789012,7654321098,789 Oak St
+------------------------------------------------------------------------------
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Step 1: Create the 'heights-and-weights' dataset
+np.random.seed(42)
+heights = np.random.normal(170, 10, 1000)
+weights = 0.5 * heights + np.random.normal(0, 5, 1000)
+data = pd.DataFrame({'Height': heights, 'Weight': weights})
+
+# Displaying the first few rows of the dataset
+print("heights-and-weights dataset:")
+print(data.head())
+
+# Step 2: Identify independent and target variables
+X = data[['Height']]  # Independent variable
+y = data['Weight']    # Target variable
+
+# Step 3: Split the variables into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Displaying the shapes of the training and testing sets
+print("\nTraining set - X shape:", X_train.shape, "y shape:", y_train.shape)
+print("Testing set - X shape:", X_test.shape, "y shape:", y_test.shape)
+
+# Step 4: Build a simple linear regression model
+lin_reg = LinearRegression()
+
+# Fitting the model to the training data
+lin_reg.fit(X_train, y_train)
+
+# Printing the coefficients and intercept
+print("\nCoefficients:", lin_reg.coef_)
+print("Intercept:", lin_reg.intercept_)
+------------------------------------------------------------------------------------------
+Slip 13
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Greetings</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#nameInput").on("input", function() {
+                var name = $(this).val();
+                if (name.trim() === "") {
+                    $("#response").text("Stranger, please tell me your name!");
+                } else if (["Rohit", "Virat", "Dhoni", "Ashwin", "Harbhajan"].includes(name)) {
+                    $("#response").text("Hello, master!");
+                } else {
+                    $("#response").text("I don't know you!");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Dynamic Greetings</h2>
+    <label for="nameInput">Enter your name:</label>
+    <input type="text" id="nameInput">
+    <div id="response"></div>
+</body>
+</html>
+-----------------------------------------------------------------------------------------------
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Step 1: Download the Nursery dataset from UCI repository and load it
+# Assuming the dataset is already downloaded and stored as 'nursery.csv'
+
+# Load the dataset
+df = pd.read_csv('nursery.csv')
+
+# Display the first few rows of the dataset
+print("Nursery dataset:")
+print(df.head())
+
+# Step 2: Identify independent and target variables
+# For illustration purposes, let's select 'social' as the target variable and treat it as numeric
+X = df.drop('social', axis=1)  # Independent variables
+y = df['social']  # Target variable
+
+# Step 3: Split the variables into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Displaying the shapes of the training and testing sets
+print("\nTraining set - X shape:", X_train.shape, "y shape:", y_train.shape)
+print("Testing set - X shape:", X_test.shape, "y shape:", y_test.shape)
+
+# Step 4: Build a simple linear regression model
+lin_reg = LinearRegression()
+
+# Fitting the model to the training data
+lin_reg.fit(X_train, y_train)
+
+# Printing the coefficients and intercept
+print("\nCoefficients:", lin_reg.coef_)
+print("Intercept:", lin_reg.intercept_)
+-------------------------------------------------------------------------------------------------
+Slip 14
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Teacher Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#teacherSelect").change(function() {
+                var selectedTeacher = $(this).val();
+                $.ajax({
+                    url: "getTeacherDetails.php",
+                    type: "POST",
+                    data: { tname: selectedTeacher },
+                    success: function(response) {
+                        $("#teacherDetails").html(response);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Select Teacher Details</h2>
+    <label for="teacherSelect">Select Teacher:</label>
+    <select id="teacherSelect">
+        <option value="">Select</option>
+        <!-- Options will be populated dynamically using PHP -->
+    </select>
+    <div id="teacherDetails"></div>
+</body>
+</html>
+-------------------
+getTeacherDetail.php
+<?php
+// Establish connection to the database
+$servername = "your_servername";
+$username = "your_username";
+$password = "your_password";
+$dbname = "your_database";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Retrieve selected teacher's details
+if (isset($_POST['tname'])) {
+    $selectedTeacher = $_POST['tname'];
+    $sql = "SELECT * FROM TEACHER WHERE tname = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $selectedTeacher);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        echo "<p><strong>Teacher Name:</strong> " . $row['tname'] . "</p>";
+        echo "<p><strong>Qualification:</strong> " . $row['qualification'] . "</p>";
+        echo "<p><strong>Salary:</strong> $" . $row['salary'] . "</p>";
+    } else {
+        echo "No data available for the selected teacher.";
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+-----------------------------------------------------------------------------------
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Create the dataset
+data = {
+    'Transaction': [1, 2, 3, 4, 5],
+    'Items': [['A', 'B', 'C'],
+              ['A', 'C', 'D'],
+              ['B', 'D'],
+              ['A', 'C'],
+              ['A', 'B', 'D']]
+}
+df = pd.DataFrame(data)
+
+# Step 2: Convert categorical values into numeric format
+def encode_items(items):
+    encoded_items = []
+    for item in items:
+        encoded_items.append(ord(item) - ord('A') + 1)  # Convert 'A', 'B', 'C', ... to 1, 2, 3, ...
+    return encoded_items
+
+df['Items'] = df['Items'].apply(encode_items)
+
+# Step 3: Apply Apriori algorithm
+def apply_apriori(df, min_sup):
+    # Convert the dataset into a one-hot encoded format
+    one_hot_encoded = pd.get_dummies(df['Items'].apply(pd.Series).stack(), prefix='Item').sum(level=0)
+    
+    # Apply Apriori algorithm
+    frequent_itemsets = apriori(one_hot_encoded, min_support=min_sup, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    
+    return frequent_itemsets, rules
+
+# Step 4: Repeat the process with different min_sup values
+min_sup_values = [0.2, 0.3, 0.4]
+for min_sup in min_sup_values:
+    print(f"\nMin support: {min_sup}")
+    frequent_itemsets, rules = apply_apriori(df, min_sup)
+    print("Frequent Itemsets:")
+    print(frequent_itemsets)
+    print("\nAssociation Rules:")
+    print(rules)
+--------------------------------------------------------------------------------------------------------
+Slip 15
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggestions</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#searchBox").keyup(function() {
+                var userInput = $(this).val();
+                $.ajax({
+                    url: "getSuggestions.php",
+                    type: "POST",
+                    data: { userInput: userInput },
+                    success: function(response) {
+                        $("#suggestions").html(response);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Suggestions</h2>
+    <label for="searchBox">Search:</label>
+    <input type="text" id="searchBox" name="searchBox">
+    <div id="suggestions"></div>
+</body>
+</html>
+----------
+getSuggention.php
+<?php
+// Array of suggestions
+$suggestions = array(
+    "apple",
+    "banana",
+    "orange",
+    "grape",
+    "watermelon",
+    "pineapple",
+    "strawberry",
+    "blueberry",
+    "mango",
+    "kiwi"
+);
+
+// Get user input
+$userInput = $_POST['userInput'];
+
+// Filter suggestions based on user input
+$matchingSuggestions = array();
+foreach ($suggestions as $suggestion) {
+    if (stripos($suggestion, $userInput) !== false) {
+        $matchingSuggestions[] = $suggestion;
+    }
+}
+
+// Output matching suggestions
+if (count($matchingSuggestions) > 0) {
+    foreach ($matchingSuggestions as $suggestion) {
+        echo "<p>" . $suggestion . "</p>";
+    }
+} else {
+    echo "<p>No suggestions found.</p>";
+}
+?>
+----------------------------------------------------------------------------------
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Create the dataset
+data = {
+    'Transaction': [1, 2, 3, 4, 5],
+    'Items': [['Apple', 'Banana', 'Orange'],
+              ['Apple', 'Orange', 'Grapes'],
+              ['Banana', 'Grapes'],
+              ['Apple', 'Orange'],
+              ['Apple', 'Banana', 'Grapes']]
+}
+df = pd.DataFrame(data)
+
+# Step 2: Convert categorical values into numeric format
+def encode_items(items):
+    encoded_items = []
+    for item in items:
+        if item == 'Apple':
+            encoded_items.append(1)
+        elif item == 'Banana':
+            encoded_items.append(2)
+        elif item == 'Orange':
+            encoded_items.append(3)
+        elif item == 'Grapes':
+            encoded_items.append(4)
+    return encoded_items
+
+df['Items'] = df['Items'].apply(encode_items)
+
+# Step 3: Apply Apriori algorithm
+def apply_apriori(df, min_sup):
+    # Convert the dataset into a one-hot encoded format
+    one_hot_encoded = pd.get_dummies(df['Items'].apply(pd.Series).stack(), prefix='Item').sum(level=0)
+    
+    # Apply Apriori algorithm
+    frequent_itemsets = apriori(one_hot_encoded, min_support=min_sup, use_colnames=True)
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    
+    return frequent_itemsets, rules
+
+# Step 4: Repeat the process with different min_sup values
+min_sup_values = [0.2, 0.3, 0.4]
+for min_sup in min_sup_values:
+    print(f"\nMin support: {min_sup}")
+    frequent_itemsets, rules = apply_apriori(df, min_sup)
+    print("Frequent Itemsets:")
+    print(frequent_itemsets)
+    print("\nAssociation Rules:")
+    print(rules)
+---------------------------------------------------------------------------------------------
+Slip 16
+book.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<books>
+    <book>
+        <title>Harry Potter and the Sorcerer's Stone</title>
+        <author>J.K. Rowling</author>
+        <year>1997</year>
+        <price>15.00</price>
+    </book>
+    <book>
+        <title>The Great Gatsby</title>
+        <author>F. Scott Fitzgerald</author>
+        <year>1925</year>
+        <price>10.00</price>
+    </book>
+    <book>
+        <title>To Kill a Mockingbird</title>
+        <author>Harper Lee</author>
+        <year>1960</year>
+        <price>12.00</price>
+    </book>
+    <!-- Add more books here -->
+</books>
+---------------
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#bookSelect").change(function() {
+                var selectedBook = $(this).val();
+                $.ajax({
+                    url: "getBookDetails.php",
+                    type: "POST",
+                    data: { selectedBook: selectedBook },
+                    success: function(response) {
+                        $("#bookDetails").html(response);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Book Details</h2>
+    <label for="bookSelect">Select Book:</label>
+    <select id="bookSelect">
+        <option value="">Select</option>
+        <!-- Options will be populated dynamically using PHP -->
+    </select>
+    <div id="bookDetails"></div>
+</body>
+</html>
+-------------------
+getBookDetail.php
+<?php
+// Load XML file
+$xml = simplexml_load_file("books.xml");
+
+// Get selected book
+$selectedBook = $_POST['selectedBook'];
+
+// Find details of the selected book
+foreach ($xml->book as $book) {
+    if ($book->title == $selectedBook) {
+        $title = $book->title;
+        $author = $book->author;
+        $year = $book->year;
+        $price = $book->price;
+
+        echo "<p><strong>Title:</strong> $title</p>";
+        echo "<p><strong>Author:</strong> $author</p>";
+        echo "<p><strong>Year:</strong> $year</p>";
+        echo "<p><strong>Price:</strong> $$price</p>";
+        exit; // Stop further processing
+    }
+}
+
+echo "No details found for the selected book.";
+?>
+-------------------------------------------------------------------------------------------------
+import re
+import nltk
+from nltk.tokenize import sent_tokenize
+from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Sample text paragraph
+text = """
+Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence 
+concerned with the interactions between computers and human language, in particular how to program computers 
+to process and analyze large amounts of natural language data. The goal is a computer capable of 'understanding' 
+the contents of documents, including the contextual nuances of the language within them. The technology can 
+then accurately extract information and insights contained in the documents as well as categorize and organize 
+the documents themselves. Natural language processing has its roots in the 1950s. Already in 1950, Alan Turing 
+published an article titled "Computing Machinery and Intelligence" which proposed what is now called the Turing test 
+as a criterion of intelligence. Today, NLP is an interdisciplinary field of research that combines techniques from 
+linguistics, computer science, and artificial intelligence to enable computers to process and understand human language 
+in a meaningful way.
+"""
+
+# Step 1: Preprocess the text to remove special characters and digits
+def preprocess_text(text):
+    # Remove special characters and digits
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    return text
+
+preprocessed_text = preprocess_text(text)
+
+# Step 2: Tokenize the text into sentences
+sentences = sent_tokenize(preprocessed_text)
+
+# Step 3: Calculate the importance score of each sentence using TF-IDF
+vectorizer = TfidfVectorizer(stop_words='english')
+X = vectorizer.fit_transform(sentences)
+similarity_matrix = cosine_similarity(X)
+
+# Step 4: Select top-ranked sentences to form the summary
+num_sentences = 2  # Number of sentences in the summary
+summary_indices = similarity_matrix.argsort(axis=None)[-num_sentences:][::-1]
+summary = ' '.join([sentences[index] for index in sorted(summary_indices)])
+
+print("Original Text:")
+print(text)
+print("\nPreprocessed Text:")
+print(preprocessed_text)
+print("\nSummary:")
+print(summary)
+-----------------------------------------------------------------------------------------
+Slip 17
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <script>
+        function showMessage() {
+            alert("Hello Good Morning!");
+        }
+    </script>
+</head>
+<body onload="showMessage()">
+    <h2>Student Registration</h2>
+    <form action="#" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+-----------------------------------------------------------------------------------
+import re
+import nltk
+from nltk.tokenize import sent_tokenize
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Sample text paragraph
+text = """
+So, keep working. Keep striving. Never give up. Fall down seven times, get up eight. 
+Ease is a greater threat to progress than hardship. Ease is a greater threat to progress than 
+hardship. So, keep moving, keep growing, keep learning. See you at work.
+"""
+
+# Step 1: Preprocess the text to remove special characters and digits
+def preprocess_text(text):
+    # Remove special characters and digits
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    return text
+
+preprocessed_text = preprocess_text(text)
+
+# Step 2: Tokenize the text into sentences
+sentences = sent_tokenize(preprocessed_text)
+
+# Step 3: Calculate the importance score of each sentence using TF-IDF
+vectorizer = TfidfVectorizer(stop_words='english')
+X = vectorizer.fit_transform(sentences)
+similarity_matrix = cosine_similarity(X)
+
+# Step 4: Select top-ranked sentences to form the summary
+num_sentences = 2  # Number of sentences in the summary
+summary_indices = similarity_matrix.argsort(axis=None)[-num_sentences:][::-1]
+summary = ' '.join([sentences[index] for index in sorted(summary_indices)])
+
+print("Original Text:")
+print(text)
+print("\nPreprocessed Text:")
+print(preprocessed_text)
+print("\nSummary:")
+print(summary)
+---------------------------------------------------------------------------------------------
+Slip 18
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fibonacci Numbers</title>
+    <script>
+        function printFibonacci() {
+            var num1 = 0;
+            var num2 = 1;
+            var fibonacciSeries = num1 + ", " + num2;
+
+            var n = parseInt(prompt("Enter the number of Fibonacci numbers to print:"));
+
+            for (var i = 2; i < n; i++) {
+                var nextNum = num1 + num2;
+                fibonacciSeries += ", " + nextNum;
+                num1 = num2;
+                num2 = nextNum;
+            }
+
+            alert("Fibonacci Series: " + fibonacciSeries);
+        }
+    </script>
+</head>
+<body>
+    <h2>Fibonacci Numbers</h2>
+    <button onclick="printFibonacci()">Print Fibonacci Numbers</button>
+</body>
+</html>
+------------------------------------------------------------------------------
+import re
+import nltk
+import matplotlib.pyplot as plt
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+from nltk.probability import FreqDist
+from wordcloud import WordCloud
+
+# Sample text paragraph
+text = """
+Consider any text paragraph. Remove the stopwords. Tokenize the paragraph to extract words and 
+sentences. Calculate the word frequency distribution and plot the frequencies. Plot the wordcloud of the 
+text.
+"""
+
+# Step 1: Remove stopwords from the text paragraph
+stop_words = set(stopwords.words('english'))
+words = word_tokenize(text)
+filtered_text = [word for word in words if word.lower() not in stop_words]
+
+# Step 2: Tokenize the paragraph to extract words and sentences
+sentences = sent_tokenize(text)
+words = word_tokenize(text)
+
+# Step 3: Calculate the word frequency distribution
+word_freq = FreqDist(filtered_text)
+
+# Step 4: Plot the word frequencies
+plt.figure(figsize=(10, 5))
+word_freq.plot(20, cumulative=False)
+plt.title('Word Frequency Distribution')
+plt.xlabel('Word')
+plt.ylabel('Frequency')
+plt.show()
+
+# Step 5: Plot the wordcloud of the text
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join(filtered_text))
+
+plt.figure(figsize=(10, 5))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.title('Wordcloud of the Text')
+plt.show()
+-----------------------------------------------------------------------------------------------
+Slip 19
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <script>
+        function validateForm() {
+            var username = document.forms["loginForm"]["username"].value;
+            var password = document.forms["loginForm"]["password"].value;
+
+            // Validate username
+            if (username === "") {
+                alert("Please enter a username.");
+                return false;
+            }
+
+            // Validate password
+            if (password === "") {
+                alert("Please enter a password.");
+                return false;
+            }
+
+            // If all validations pass, return true to submit the form
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h2>User Login</h2>
+    <form name="loginForm" action="#" method="post" onsubmit="return validateForm()">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+--------------------------------------------------------------------
+import pandas as pd
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.probability import FreqDist
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
+# Step 1: Load the dataset
+df = pd.read_csv('movie_review.csv')  # Assuming you have downloaded the dataset as 'movie_review.csv'
+
+# Step 2: Perform sentiment analysis (example using word frequency analysis)
+# You can perform more advanced sentiment analysis techniques like using classifiers
+
+# Preprocessing
+stop_words = set(stopwords.words('english'))
+words = ' '.join(df['text'].str.lower())
+tokens = word_tokenize(words)
+filtered_text = [word for word in tokens if word.isalnum() and word not in stop_words]
+
+# Calculate word frequency
+word_freq = FreqDist(filtered_text)
+
+# Step 3: Create a wordcloud
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join(filtered_text))
+
+# Step 4: Plot the wordcloud
+plt.figure(figsize=(10, 5))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.title('Wordcloud of Movie Reviews')
+plt.show()
+------------------------------------------------------------------------------------------
+Slip 20
+<?xml version="1.0" encoding="UTF-8"?>
+<students>
+    <student>
+        <id>1</id>
+        <name>John Doe</name>
+        <age>20</age>
+        <gender>Male</gender>
+        <grade>A</grade>
+    </student>
+    <student>
+        <id>2</id>
+        <name>Jane Smith</name>
+        <age>21</age>
+        <gender>Female</gender>
+        <grade>B</grade>
+    </student>
+    <student>
+        <id>3</id>
+        <name>Michael Johnson</name>
+        <age>19</age>
+        <gender>Male</gender>
+        <grade>C</grade>
+    </student>
+    <student>
+        <id>4</id>
+        <name>Emily Davis</name>
+        <age>22</age>
+        <gender>Female</gender>
+        <grade>B+</grade>
+    </student>
+    <student>
+        <id>5</id>
+        <name>David Brown</name>
+        <age>20</age>
+        <gender>Male</gender>
+        <grade>A-</grade>
+    </student>
+</students>
+-----------------------------------------------
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+# Sample text paragraph
+text = """Hello all, Welcome to Python Programming Academy. Python 
+Programming Academy is a nice platform to learn new programming skills. It is difficult to get enrolled 
+in this Academy."""
+
+# Tokenize the text into words
+words = word_tokenize(text)
+
+# Set of English stopwords
+stop_words = set(stopwords.words('english'))
+
+# Filter out the stopwords
+filtered_text = [word for word in words if word.lower() not in stop_words]
+
+# Join the filtered words back into a sentence
+filtered_sentence = ' '.join(filtered_text)
+
+print("Original Text:")
+print(text)
+print("\nText after removing stopwords:")
+print(filtered_sentence)
+---------------------------------------------------------------------------------------------
+Slip 21
+// numberChecker.js
+
+function checkNumber(number) {
+    if (number > 0) {
+        console.log(number + " is positive.");
+    } else if (number < 0) {
+        console.log(number + " is negative.");
+    } else {
+        console.log(number + " is zero.");
+    }
+}
+-------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Checker</title>
+    <!-- Include the numberChecker.js file -->
+    <script src="<?php echo base_url('js/numberChecker.js'); ?>"></script>
+</head>
+<body>
+    <h2>Number Checker</h2>
+    <p>Enter a number:</p>
+    <input type="text" id="numberInput">
+    <button onclick="check()">Check</button>
+
+    <script>
+        function check() {
+            var number = parseInt(document.getElementById("numberInput").value);
+            checkNumber(number);
+        }
+    </script>
+</body>
+</html>
+-------------------------------------------------------------------
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import accuracy_score
+
+# Load the User Data
+# Assuming you have a CSV file named 'user_data.csv' containing the user data
+user_data = pd.read_csv('user_data.csv')
+
+# Assuming the dataset has columns like 'Age', 'Gender', 'EstimatedSalary', and 'Purchased'
+# Define the independent variables (features) and the target variable
+X = user_data[['Age', 'Gender', 'EstimatedSalary']]  # Independent variables
+y = user_data['Purchased']  # Target variable
+
+# Convert categorical variables into dummy variables if 'Gender' is categorical
+# X = pd.get_dummies(X, drop_first=True)  # Uncomment this line if 'Gender' is categorical
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build and train the linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict the target variable for the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+# Since this is a classification problem (predicting purchase behavior), we need to convert the continuous predictions to binary (0 or 1)
+# For simplicity, let's round the predictions to the nearest integer (0 or 1)
+y_pred_binary = [1 if pred >= 0.5 else 0 for pred in y_pred]
+
+# Calculate the accuracy of the model
+accuracy = accuracy_score(y_test, y_pred_binary)
+print("Accuracy:", accuracy)
+-------------------------------------------------------------------------------------------------------------------------
+SLip 22
+
+CREATE TABLE student (
+    rollno INT PRIMARY KEY,
+    name VARCHAR(100),
+    class VARCHAR(50)
+);
+
+application/models/Student_model.php
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Student_model extends CI_Model {
+    
+    public function __construct() {
+        parent::__construct();
+    }
+    
+    public function insert_students() {
+        $data = array(
+            array('rollno' => '1', 'name' => 'John Doe', 'class' => '10th'),
+            array('rollno' => '2', 'name' => 'Jane Smith', 'class' => '11th'),
+            array('rollno' => '3', 'name' => 'Michael Johnson', 'class' => '12th'),
+            array('rollno' => '4', 'name' => 'Emily Davis', 'class' => '10th'),
+            array('rollno' => '5', 'name' => 'David Brown', 'class' => '11th')
+        );
+        
+        $this->db->insert_batch('student', $data);
+    }
+}
+?>
+
+
+-------------
+application/controllers/Student.php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Student extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->model('Student_model');
+    }
+
+    public function insert_students() {
+        $this->Student_model->insert_students();
+        echo "Records inserted successfully!";
+    }
+}
+?>
+-------------------------------------------------------------------------------------------
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+# Sample text paragraph
+text_paragraph = """
+Consider any text paragraph. Remove the stopwords.
+"""
+
+# Tokenize the text paragraph into words
+words = word_tokenize(text_paragraph)
+
+# Set of English stopwords
+stop_words = set(stopwords.words('english'))
+
+# Filter out the stopwords
+filtered_words = [word for word in words if word.lower() not in stop_words]
+
+# Join the filtered words back into a paragraph
+filtered_paragraph = ' '.join(filtered_words)
+
+print("Original Text Paragraph:")
+print(text_paragraph)
+print("\nText Paragraph after Removing Stopwords:")
+print(filtered_paragraph)
+------------------------------------------------------------------------------------------
+Slip 23
+
+application/models/Student_model.php
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Student_model extends CI_Model {
+    
+
+    public function __construct() {
+        parent::__construct();
+    }
+    
+    public function get_all_students() {
+        $query = $this->db->get('student');
+        return $query->result_array();
+    }
+}
+?>
+---------
+application/controllers/Student.php
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Student extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->model('Student_model');
+    }
+
+    public function display_students() {
+        $data['students'] = $this->Student_model->get_all_students();
+        $this->load->view('student_list', $data);
+    }
+}
+?>
+
+--------
+application/views/student_list.php
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+</head>
+<body>
+    <h2>Student List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Class</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($students as $student) { ?>
+                <tr>
+                    <td><?php echo $student['rollno']; ?></td>
+                    <td><?php echo $student['name']; ?></td>
+                    <td><?php echo $student['class']; ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</body>
+</html>
+-----------------------------------------------------------------------------------------
+import re
+
+# Sample text paragraph
+text_paragraph = """
+Consider any text paragraph. Preprocess the text to remove any special characters and digits.
+"""
+
+# Remove special characters and digits using regular expressions
+processed_text = re.sub(r'[^a-zA-Z\s]', '', text_paragraph)
+
+print("Original Text Paragraph:")
+print(text_paragraph)
+print("\nProcessed Text Paragraph:")
+print(processed_text)
+--------------------------------------------------------------------------------------------
+Slip 24
+
+<?php
+// Function to generate student XML file
+function generateStudentXML($filename) {
+    $students = array(
+        array('rollno' => '1', 'name' => 'John Doe', 'address' => '123 Main St', 'college' => 'ABC College', 'course' => 'Engineering'),
+        array('rollno' => '2', 'name' => 'Jane Smith', 'address' => '456 Elm St', 'college' => 'XYZ University', 'course' => 'Computer Science'),
+        array('rollno' => '3', 'name' => 'Michael Johnson', 'address' => '789 Oak St', 'college' => 'DEF Institute', 'course' => 'Medicine'),
+        array('rollno' => '4', 'name' => 'Emily Davis', 'address' => '101 Pine St', 'college' => 'GHI College', 'course' => 'Business'),
+        array('rollno' => '5', 'name' => 'David Brown', 'address' => '222 Maple St', 'college' => 'JKL University', 'course' => 'Arts')
+    );
+
+    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><students></students>');
+    foreach ($students as $student) {
+        $studentNode = $xml->addChild('student');
+        $studentNode->addChild('rollno', $student['rollno']);
+        $studentNode->addChild('name', $student['name']);
+        $studentNode->addChild('address', $student['address']);
+        $studentNode->addChild('college', $student['college']);
+        $studentNode->addChild('course', $student['course']);
+    }
+
+    $xml->asXML($filename);
+    echo "Student XML file created successfully!";
+}
+
+// Function to print students of a specific course
+function printStudentsByCourse($filename, $course) {
+    $xml = simplexml_load_file($filename);
+    $students = $xml->xpath("//student[course='{$course}']");
+    if (!empty($students)) {
+        echo "<h2>Students of $course</h2>";
+        echo "<table border='1'>";
+        echo "<tr><th>Roll No</th><th>Name</th><th>Address</th><th>College</th><th>Course</th></tr>";
+        foreach ($students as $student) {
+            echo "<tr>";
+            echo "<td>{$student->rollno}</td>";
+            echo "<td>{$student->name}</td>";
+            echo "<td>{$student->address}</td>";
+            echo "<td>{$student->college}</td>";
+            echo "<td>{$student->course}</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "No students found for course $course";
+    }
+}
+
+// Generate student.xml file
+generateStudentXML("student.xml");
+
+// Print students of a specific course
+$course = isset($_GET['course']) ? $_GET['course'] : '';
+if (!empty($course)) {
+    printStudentsByCourse("student.xml", $course);
+}
+?>
+-----------
+<?xml version="1.0" encoding="UTF-8"?>
+<students>
+  <student>
+    <rollno>1</rollno>
+    <name>John Doe</name>
+    <address>123 Main St</address>
+    <college>ABC College</college>
+    <course>Engineering</course>
+  </student>
+  <student>
+    <rollno>2</rollno>
+    <name>Jane Smith</name>
+    <address>456 Elm St</address>
+    <college>XYZ University</college>
+    <course>Computer Science</course>
+  </student>
+  <student>
+    <rollno>3</rollno>
+    <name>Michael Johnson</name>
+    <address>789 Oak St</address>
+    <college>DEF Institute</college>
+    <course>Medicine</course>
+  </student>
+  <student>
+    <rollno>4</rollno>
+    <name>Emily Davis</name>
+    <address>101 Pine St</address>
+    <college>GHI College</college>
+    <course>Business</course>
+  </student>
+  <student>
+    <rollno>5</rollno>
+    <name>David Brown</name>
+    <address>222 Maple St</address>
+    <college>JKL University</college>
+    <course>Arts</course>
+  </student>
+</students>
+---------------------------------------------------------------------
+import pandas as pd
+
+# Step 1: Read the dataset and perform data cleaning operations
+# Assuming the dataset file is named 'INvideos.csv' and it is in the same directory as this script
+df = pd.read_csv('INvideos.csv')
+
+# Display the first few rows of the dataset
+print("Original Dataset:")
+print(df.head())
+
+# Data cleaning operations (example: drop unnecessary columns, handle missing values, etc.)
+# For demonstration, let's drop rows with missing values in any column
+df.dropna(inplace=True)
+
+# Step 2: Calculate total views, total likes, total dislikes, and comment count
+total_views = df['views'].sum()
+total_likes = df['likes'].sum()
+total_dislikes = df['dislikes'].sum()
+total_comments = df['comment_count'].sum()
+
+print("\nTotal Views:", total_views)
+print("Total Likes:", total_likes)
+print("Total Dislikes:", total_dislikes)
+print("Total Comment Count:", total_comments)
+---------------------------------------------------------------------------------
+Slip 25
+<?php
+// Function to create cricket.xml file with initial structure
+function createCricketXML($filename) {
+    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><CricketTeam></CricketTeam>');
+    return $xml->asXML($filename);
+}
+
+// Function to add player details to cricket.xml for a specific country
+function addPlayerDetails($filename, $country, $players) {
+    if (!file_exists($filename)) {
+        createCricketXML($filename);
+    }
+    
+    $xml = simplexml_load_file($filename);
+    $team = $xml->addChild('Team');
+    $team->addAttribute('country', $country);
+    
+    foreach ($players as $player) {
+        $playerNode = $team->addChild('player', $player['name']);
+        $playerNode->addChild('runs', $player['runs']);
+        $playerNode->addChild('wicket', $player['wicket']);
+    }
+    
+    $xml->asXML($filename);
+    echo "Player details added successfully for $country!";
+}
+
+// Players data to be added for India
+$playersIndia = array(
+    array('name' => 'Virat Kohli', 'runs' => '12000', 'wicket' => '10'),
+    array('name' => 'Rohit Sharma', 'runs' => '10000', 'wicket' => '5'),
+    array('name' => 'Jasprit Bumrah', 'runs' => '500', 'wicket' => '150')
+);
+
+// Add player details for India in cricket.xml
+addPlayerDetails('cricket.xml', 'India', $playersIndia);
+?>
+------------------------------------------------------------------------------
+import pandas as pd
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+# Step 1: Read the dataset and perform data cleaning operations
+# Assuming the dataset file is named 'covid_2021_1.csv' and it is in the same directory as this script
+df = pd.read_csv('covid_2021_1.csv')
+
+# Display the first few rows of the dataset
+print("Original Dataset:")
+print(df.head())
+
+# Data cleaning operations (example: drop unnecessary columns, handle missing values, etc.)
+# For demonstration, let's drop rows with missing values in the 'comment' column
+df.dropna(subset=['comment'], inplace=True)
+
+# Step 2: Tokenize the comments into words
+def tokenize_comments(comment):
+    return word_tokenize(comment)
+
+df['tokenized_comments'] = df['comment'].apply(tokenize_comments)
+
+# Step 3: Perform sentiment analysis and find the percentage of positive, negative, and neutral comments
+sia = SentimentIntensityAnalyzer()
+
+def analyze_sentiment(tokens):
+    sentiments = [sia.polarity_scores(token)['compound'] for token in tokens]
+    positive_count = sum(sentiment > 0 for sentiment in sentiments)
+    negative_count = sum(sentiment < 0 for sentiment in sentiments)
+    neutral_count = len(sentiments) - positive_count - negative_count
+    total_count = len(sentiments)
+    positive_percentage = (positive_count / total_count) * 100
+    negative_percentage = (negative_count / total_count) * 100
+    neutral_percentage = (neutral_count / total_count) * 100
+    return positive_percentage, negative_percentage, neutral_percentage
+
+df['positive_percentage'], df['negative_percentage'], df['neutral_percentage'] = zip(*df['tokenized_comments'].apply(analyze_sentiment))
+
+# Display the updated dataset with sentiment analysis results
+print("\nUpdated Dataset with Sentiment Analysis Results:")
+print(df.head())
+
+# Calculate the overall percentage of positive, negative, and neutral comments
+overall_positive_percentage = df['positive_percentage'].mean()
+overall_negative_percentage = df['negative_percentage'].mean()
+overall_neutral_percentage = df['neutral_percentage'].mean()
+
+print("\nOverall Sentiment Analysis Results:")
+print("Percentage of Positive Comments:", overall_positive_percentage)
+print("Percentage of Negative Comments:", overall_negative_percentage)
+print("Percentage of Neutral Comments:", overall_neutral_percentage)
+-----------------------------------------------------------------------------------------------------------
+Slip 26
+
+
+
+
+
+ 
