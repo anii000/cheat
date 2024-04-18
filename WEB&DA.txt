@@ -2393,9 +2393,494 @@ print("Percentage of Negative Comments:", overall_negative_percentage)
 print("Percentage of Neutral Comments:", overall_neutral_percentage)
 -----------------------------------------------------------------------------------------------------------
 Slip 26
+slipno_26
+<?php
+// Database connection
+$servername = "localhost";
+$username = "your_username";
+$password = "your_password";
+$database = "your_database";
 
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
 
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
+// Get selected employee name from AJAX request
+$selected_employee = $_GET['employee'];
 
+// Query to fetch employee details based on selected name
+$sql = "SELECT * FROM EMP WHERE ename = '$selected_employee'";
+$result = $conn->query($sql);
 
- 
+// Check if query is successful
+if ($result->num_rows > 0) {
+    // Output data of each row
+    $row = $result->fetch_assoc();
+    echo json_encode($row); // Send employee details as JSON response
+} else {
+    echo "No employee found with the selected name.";
+}
+
+$conn->close();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Details</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<label for="employee">Select Employee:</label>
+<select id="employee">
+  <option value="">Select an employee</option>
+  <!-- Populate dropdown options with employee names -->
+  <?php
+    // Database connection
+    $servername = "localhost";
+    $username = "your_username";
+    $password = "your_password";
+    $database = "your_database";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $database);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Query to fetch employee names
+    $sql = "SELECT ename FROM EMP";
+    $result = $conn->query($sql);
+
+    // Output dropdown options
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            echo "<option value='" . $row['ename'] . "'>" . $row['ename'] . "</option>";
+        }
+    } else {
+        echo "<option value=''>No employees found</option>";
+    }
+
+    $conn->close();
+  ?>
+</select>
+
+<div id="employeeDetails"></div>
+
+<script>
+$(document).ready(function(){
+  $("#employee").change(function(){
+    var selectedEmployee = $(this).val();
+    $.ajax({
+      url: "get_employee_details.php",
+      type: "GET",
+      data: {employee: selectedEmployee},
+      dataType: "json",
+      success: function(response){
+        // Display employee details
+        $("#employeeDetails").html("<h2>Employee Details</h2><p>Employee No: " + response.eno + "</p><p>Name: " + response.ename + "</p><p>Designation: " + response.designation + "</p><p>Salary: " + response.salary + "</p>");
+      },
+      error: function(){
+        $("#employeeDetails").html("<p>Error fetching employee details.</p>");
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
+--------------------------------------------------------------------------------------
+import re
+from nltk.tokenize import sent_tokenize
+from gensim.summarization import summarize
+
+# Text paragraph
+text = """Hello all, Welcome to Python Programming Academy. Python Programming Academy is a nice platform to learn new programming skills. It is difficult to get enrolled in this Academy."""
+
+# Preprocess the text to remove special characters and digits
+processed_text = re.sub(r'[^a-zA-Z\s]', '', text)
+
+# Tokenize the text into sentences
+sentences = sent_tokenize(processed_text)
+
+# Join the sentences into a single string
+processed_text = ' '.join(sentences)
+
+# Generate the summary using extractive summarization
+summary = summarize(processed_text)
+
+print("Original Text:")
+print(text)
+print("\nProcessed Text:")
+print(processed_text)
+print("\nSummary:")
+print(summary)
+_----------------
+
+slip no_27
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voter Registration</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h2>Voter Registration Form</h2>
+<form id="voterForm">
+  <label for="name">Name (Upper case only):</label><br>
+  <input type="text" id="name" name="name" pattern="[A-Z\s]+" required><br>
+  <label for="age">Age:</label><br>
+  <input type="number" id="age" name="age" min="18" required><br>
+  <label for="nationality">Nationality (Indian only):</label><br>
+  <input type="text" id="nationality" name="nationality" pattern="Indian" required><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<div id="message"></div>
+
+<script>
+$(document).ready(function(){
+  $("#voterForm").submit(function(event){
+    event.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "submit.php",
+      data: $(this).serialize(),
+      success: function(response){
+        $("#message").html(response);
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
+
+<?php
+$name = strtoupper($_POST['name']);
+$age = $_POST['age'];
+$nationality = strtoupper($_POST['nationality']);
+$message = "";
+
+if (!preg_match("/^[A-Z\s]+$/", $name)) {
+    $message = "Name should be in upper case letters only.";
+} elseif ($age < 18) {
+    $message = "Age should not be less than 18 years.";
+} elseif ($nationality !== "INDIAN") {
+    $message = "Nationality should be Indian only.";
+} else {
+    $message = "Validation successful. Voter details submitted.";
+}
+
+echo $message;
+?>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+import re
+from nltk.tokenize import sent_tokenize
+from gensim.summarization import summarize
+
+# Transactions dataset
+transactions = [
+    "On 2022-04-10, $50 was spent on groceries at the supermarket.",
+    "A withdrawal of $100 was made from the ATM on 2022-04-12.",
+    "A deposit of $500 was made to the bank account on 2022-04-15.",
+    "An online purchase of $200 was made on 2022-04-20.",
+    "Another withdrawal of $50 was made on 2022-04-25."
+]
+
+# Join transactions into a single string
+text = ' '.join(transactions)
+
+# Preprocess the text to remove special characters and digits
+processed_text = re.sub(r'[^a-zA-Z\s]', '', text)
+
+# Tokenize the text into sentences
+sentences = sent_tokenize(processed_text)
+
+# Join the sentences into a single string
+processed_text = ' '.join(sentences)
+
+# Generate the summary using extractive summarization
+summary = summarize(processed_text)
+
+print("Original Transactions:")
+for transaction in transactions:
+    print(transaction)
+print("\nProcessed Text:")
+print(processed_text)
+print("\nSummary:")
+print(summary)
+-------------------------
+
+slipno_28
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h2>Login Form</h2>
+<form id="loginForm">
+  <label for="username">Username:</label><br>
+  <input type="text" id="username" name="username" required><br>
+  <label for="password">Password:</label><br>
+  <input type="password" id="password" name="password" required><br><br>
+  <input type="submit" value="Login">
+</form>
+
+<div id="message"></div>
+
+<script>
+$(document).ready(function(){
+  $("#loginForm").submit(function(event){
+    event.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "check_login.php",
+      data: $(this).serialize(),
+      success: function(response){
+        $("#message").html(response);
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
+
+<?php
+// Database connection
+$servername = "localhost";
+$username = "your_username";
+$password = "your_password";
+$database = "your_database";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch username and password from POST request
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+// Prepare SQL query to check if username and password are valid
+$sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+$result = $conn->query($sql);
+
+// Check if query returned any rows
+if ($result->num_rows > 0) {
+    echo "Login successful";
+} else {
+    echo "Invalid username or password";
+}
+
+$conn->close();
+?>
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset
+# Replace 'car_data.csv' with the actual path to your dataset
+car_data = pd.read_csv('car_data.csv')
+
+# Preprocess the data (if necessary)
+# For demonstration purposes, let's assume the dataset is already preprocessed
+
+# Split the data into features (X) and target variable (y)
+X = car_data[['feature1', 'feature2', 'feature3']]  # Add relevant features
+y = car_data['target_variable']  # Add the target variable
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate the model
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+-------------------------
+
+slipno_29
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fibonacci Series and Sum of Digits</title>
+</head>
+<body>
+
+<h2>Enter a Number</h2>
+<form method="post">
+  <label for="number">Number:</label><br>
+  <input type="number" id="number" name="number" required><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<?php
+// Function to generate Fibonacci series
+function fibonacci($n) {
+    $fib = [];
+    $fib[0] = 0;
+    $fib[1] = 1;
+    for ($i = 2; $i < $n; $i++) {
+        $fib[$i] = $fib[$i - 1] + $fib[$i - 2];
+    }
+    return $fib;
+}
+
+// Function to find sum of digits
+function sumOfDigits($number) {
+    $sum = 0;
+    while ($number > 0) {
+        $sum += $number % 10;
+        $number = (int)($number / 10);
+    }
+    return $sum;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $number = $_POST["number"];
+
+    // Calculate Fibonacci series
+    $fibonacci_series = fibonacci($number);
+    echo "<h3>Fibonacci Series:</h3>";
+    echo implode(", ", $fibonacci_series) . "<br>";
+
+    // Calculate sum of digits
+    $sum_of_digits = sumOfDigits($number);
+    echo "<h3>Sum of Digits:</h3>";
+    echo "The sum of digits of $number is: $sum_of_digits";
+}
+?>
+
+</body>
+</html>
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Load the dataset
+# Replace 'student_score.csv' with the actual path to your dataset
+student_data = pd.read_csv('student_score.csv')
+
+# Preprocess the data (if necessary)
+# For demonstration purposes, let's assume the dataset is already preprocessed
+
+# Split the data into features (X) and target variable (y)
+X = student_data[['feature1', 'feature2', 'feature3']]  # Add relevant features
+y = student_data['target_variable']  # Add the target variable
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the logistic regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Evaluate the model
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+ ------------------------
+slipno_30
+<Bookstore>
+    <Yoga>
+        <Book>
+            <Book_Title>The Power of Now</Book_Title>
+            <Book_Author>Eckhart Tolle</Book_Author>
+            <Book_Price>15.99</Book_Price>
+        </Book>
+        <Book>
+            <Book_Title>Light on Yoga</Book_Title>
+            <Book_Author>B.K.S. Iyengar</Book_Author>
+            <Book_Price>12.50</Book_Price>
+        </Book>
+    </Yoga>
+    <Story>
+        <Book>
+            <Book_Title>The Alchemist</Book_Title>
+            <Book_Author>Paulo Coelho</Book_Author>
+            <Book_Price>10.99</Book_Price>
+        </Book>
+        <Book>
+            <Book_Title>Harry Potter and the Philosopher's Stone</Book_Title>
+            <Book_Author>J.K. Rowling</Book_Author>
+            <Book_Price>8.99</Book_Price>
+        </Book>
+    </Story>
+    <Technical>
+        <Book>
+            <Book_Title>Introduction to Algorithms</Book_Title>
+            <Book_Author>Thomas H. Cormen</Book_Author>
+            <Book_Price>30.00</Book_Price>
+        </Book>
+        <Book>
+            <Book_Title>Clean Code</Book_Title>
+            <Book_Author>Robert C. Martin</Book_Author>
+            <Book_Price>25.50</Book_Price>
+        </Book>
+    </Technical>
+</Bookstore>
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Define the dataset
+transactions = [['eggs', 'milk', 'bread'],
+                ['eggs', 'apple'],
+                ['milk', 'bread'],
+                ['apple', 'milk'],
+                ['milk', 'apple', 'bread']]
+
+# Perform one-hot encoding
+te = TransactionEncoder()
+te_ary = te.fit(transactions).transform(transactions)
+df = pd.DataFrame(te_ary, columns=te.columns_)
+
+# Apply Apriori algorithm to generate frequent itemsets
+frequent_itemsets = apriori(df, min_support=0.2, use_colnames=True)
+
+# Generate association rules
+association_rules_df = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+
+# Print frequent itemsets and association rules
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+
+print("\nAssociation Rules:")
+print(association_rules_df)
