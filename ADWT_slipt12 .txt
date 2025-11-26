@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Registration – Departmental Store</title>
+</head>
+<body>
+    <h2>Customer Registration Form</h2>
+    <form action="#" method="post">
+
+        <!-- Customer Name -->
+        <label for="name">Full Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <!-- Contact Number -->
+        <label for="contact">Contact Number:</label><br>
+        <input type="tel" id="contact" name="contact" pattern="[0-9]{10}" 
+               placeholder="10-digit number" required><br><br>
+
+        <!-- Gender -->
+        <label>Gender:</label><br>
+        <input type="radio" name="gender" value="Male"> Male
+        <input type="radio" name="gender" value="Female"> Female
+        <input type="radio" name="gender" value="Other"> Other
+        <br><br>
+
+        <!-- Preferred Days of Purchasing -->
+        <label>Preferred Days of Purchasing:</label><br>
+        <input type="checkbox" name="days" value="Monday"> Monday
+        <input type="checkbox" name="days" value="Wednesday"> Wednesday
+        <input type="checkbox" name="days" value="Friday"> Friday
+        <input type="checkbox" name="days" value="Weekend"> Weekend
+        <br><br>
+
+        <!-- Favorite Item Selection -->
+        <label for="item">Favorite Item:</label><br>
+        <select id="item" name="item">
+            <option value="Groceries">Groceries</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Cosmetics">Cosmetics</option>
+            <option value="Home Appliances">Home Appliances</option>
+        </select>
+        <br><br>
+
+        <!-- Suggestions Box -->
+        <label for="suggestions">Suggestions / Feedback:</label><br>
+        <textarea id="suggestions" name="suggestions" rows="4" cols="40"
+                  placeholder="Write your suggestions here..."></textarea>
+        <br><br>
+
+        <!-- Form Buttons -->
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+
+    </form>
+</body>
+</html>
+----------------------------------------------------------------------------------------------------
+/**********************************************************
+   ONLINE MOVIE INFORMATION – DOCUMENT DATABASE (MongoDB)
+**********************************************************/
+
+// 🔹 Create / Select Database
+use onlineMovieDB;
+
+/***********************
+   1) MOVIES COLLECTION
+***********************/
+
+db.movies.insertMany([
+{
+    _id: ObjectId("6001"),
+    title: "Sooryavanshi",
+    year: 2021,
+    budget: 160,
+    actors: [
+        {actor_name: "Akshay", role: "ATS Chief"},
+        {actor_name: "Katrina", role: "Doctor"}
+    ],
+    producers: ["Karan Johar", "Rohit Shetty"]
+},
+{
+    _id: ObjectId("6002"),
+    title: "Housefull 4",
+    year: 2019,
+    budget: 75,
+    actors: [
+        {actor_name: "Akshay", role: "Harry"},
+        {actor_name: "Riteish", role: "Roy"}
+    ],
+    producers: ["Sajid Nadiadwala"]
+},
+{
+    _id: ObjectId("6003"),
+    title: "War",
+    year: 2019,
+    budget: 200,
+    actors: [
+        {actor_name: "Hrithik", role: "Agent"},
+        {actor_name: "Tiger", role: "RAW Officer"}
+    ],
+    producers: ["Aditya Chopra"]
+},
+{
+    _id: ObjectId("6004"),
+    title: "Kesari",
+    year: 2019,
+    budget: 100,
+    actors: [
+        {actor_name: "Akshay", role: "Havildar"},
+        {actor_name: "Parineeti", role: "Wife"}
+    ],
+    producers: ["Karan Johar", "Apoorva Mehta"]
+},
+{
+    _id: ObjectId("6005"),
+    title: "Dhoom 3",
+    year: 2014,
+    budget: 175,
+    actors: [
+        {actor_name: "Aamir", role: "Twin Brothers"},
+        {actor_name: "Katrina", role: "Acrobat"}
+    ],
+    producers: ["Aditya Chopra", "Vijay Krishna"]
+}
+]);
+
+
+/***********************
+   2) ACTORS COLLECTION
+***********************/
+
+db.actors.insertMany([
+{_id:ObjectId("7001"),name:"Akshay",age:55,
+ movies:[{movie_id:ObjectId("6001"),role:"ATS Chief"},{movie_id:ObjectId("6002"),role:"Harry"},{movie_id:ObjectId("6004"),role:"Havildar"}]},
+{_id:ObjectId("7002"),name:"Katrina",age:38,
+ movies:[{movie_id:ObjectId("6001"),role:"Doctor"},{movie_id:ObjectId("6005"),role:"Acrobat"}]},
+{_id:ObjectId("7003"),name:"Riteish",age:44,
+ movies:[{movie_id:ObjectId("6002"),role:"Roy"}]},
+{_id:ObjectId("7004"),name:"Hrithik",age:48,
+ movies:[{movie_id:ObjectId("6003"),role:"Agent"}]},
+{_id:ObjectId("7005"),name:"Tiger",age:31,
+ movies:[{movie_id:ObjectId("6003"),role:"RAW Officer"}]}
+]);
+
+
+/*************************
+   3) PRODUCERS COLLECTION
+*************************/
+
+db.producers.insertMany([
+{_id:ObjectId("8001"),name:"Karan Johar",company:"Dharma",
+ movies_produced:[{movie_id:ObjectId("6001"),year:2021},{movie_id:ObjectId("6004"),year:2019}]},
+{_id:ObjectId("8002"),name:"Rohit Shetty",company:"RSP",
+ movies_produced:[{movie_id:ObjectId("6001"),year:2021}]},
+{_id:ObjectId("8003"),name:"Sajid Nadiadwala",company:"NGE",
+ movies_produced:[{movie_id:ObjectId("6002"),year:2019}]},
+{_id:ObjectId("8004"),name:"Aditya Chopra",company:"YRF",
+ movies_produced:[{movie_id:ObjectId("6003"),year:2019},{movie_id:ObjectId("6005"),year:2014}]},
+{_id:ObjectId("8005"),name:"Apoorva Mehta",company:"Dharma",
+ movies_produced:[{movie_id:ObjectId("6004"),year:2019}]}
+]);
+
+
+/************************************************
+   4) QUERIES – OUTPUTS AS REQUIRED IN QUESTION
+************************************************/
+
+// a) List the names of movies with the highest budget
+db.movies.aggregate([
+  { $group: { _id:null, maxBudget:{ $max:"$budget" } } },
+  { $lookup: {
+      from:"movies",
+      pipeline:[ { $match: { budget: { $gte:200 } } } ],
+      as:"HighestBudgetMovies"
+  }}
+]);
+
+// b) Producer who produced more than one movie in a year
+db.producers.aggregate([
+  { $unwind:"$movies_produced" },
+  { $group:{ _id:{name:"$name",year:"$movies_produced.year"}, count:{$sum:1} } },
+  { $match:{ count:{ $gt:1 } } }
+]);
+
+// c) Actors who acted in a movie with ‘Akshay’
+db.movies.aggregate([
+  { $match:{ "actors.actor_name":"Akshay" } },
+  { $unwind:"$actors" },
+  { $match:{ "actors.actor_name":{ $ne:"Akshay" } } },
+  { $group:{ _id:"$actors.actor_name" } }
+]);
+
+// d) Movies produced by more than one producer
+db.movies.find({ $where:"this.producers.length > 1" }, {title:1, producers:1});

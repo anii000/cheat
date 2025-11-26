@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Persons</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin-top: 10px;
+            border: 2px solid black;
+            border-radius: 10px;
+            overflow: hidden; /* so radius applies nicely */
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>List of Persons</h2>
+
+    <table>
+        <tr>
+            <th>Srno</th>
+            <th>Person Name</th>
+            <th>Age</th>
+            <th>Country</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+</body>
+</html>
+-----------------------------------------------------------------------------Collection : projects
+{
+   _id: ObjectId(),
+   project_name: "Project A",
+   project_type: "Web App",
+   duration_months: 5,
+   technologies: ["Java", "MongoDB", "React"]
+}
+
+Collection : employees
+{
+   _id: ObjectId(),
+   emp_name: "Employee Name",
+   age: Number,
+   project_id: ObjectId("ref to projects"),
+   role: "Developer"
+}
+
+3. Insert Minimum 5 Documents Per Collection
+Insert into projects
+db.projects.insertMany([
+{ _id:ObjectId("5001"), project_name:"Inventory System", project_type:"Web", duration_months:6, technologies:["Java","MongoDB","Angular"] },
+{ _id:ObjectId("5002"), project_name:"CRM Portal", project_type:"Web", duration_months:2, technologies:["PHP","MySQL"] },
+{ _id:ObjectId("5003"), project_name:"Mobile Banking", project_type:"Mobile App", duration_months:8, technologies:["Kotlin","Firebase"] },
+{ _id:ObjectId("5004"), project_name:"Chatbot AI", project_type:"AI", duration_months:4, technologies:["Python","Tensorflow"] },
+{ _id:ObjectId("5005"), project_name:"E-Commerce", project_type:"Web", duration_months:5, technologies:["MERN","Cloud"] }
+]);
+
+Insert into employees
+db.employees.insertMany([
+{ _id:ObjectId("6001"), emp_name:"Mr. Patil", age:32, project_id:ObjectId("5001"), role:"Backend Dev" },
+{ _id:ObjectId("6002"), emp_name:"Ravi", age:28, project_id:ObjectId("5001"), role:"Frontend Dev" },
+{ _id:ObjectId("6003"), emp_name:"Sneha", age:25, project_id:ObjectId("5004"), role:"ML Engineer" },
+{ _id:ObjectId("6004"), emp_name:"Rahul", age:30, project_id:ObjectId("5005"), role:"Full Stack" },
+{ _id:ObjectId("6005"), emp_name:"Anjali", age:27, project_id:ObjectId("5003"), role:"Android Dev" }
+]);
+
+4. Required Queries
+a. List all projects where project_type = 'Web'
+db.projects.find({ project_type:"Web" }, {project_name:1,_id:0});
+
+b. List projects with duration > 3 months
+db.projects.find({ duration_months:{ $gt:3 } }, {project_name:1,duration_months:1});
+
+c. Count number of employees working on "Inventory System"
+db.employees.aggregate([
+   { $lookup:{ from:"projects", localField:"project_id", foreignField:"_id", as:"proj" }},
+   { $match:{ "proj.project_name":"Inventory System" }},
+   { $count:"Total Employees Working" }
+]);
+
+d. List the names of projects Mr. Patil is working on
+db.employees.aggregate([
+   { $match:{ emp_name:"Mr. Patil" }},
+   { $lookup:{ from:"projects", localField:"project_id", foreignField:"_id", as:"Project Details" }},
+   { $project:{ "Project Details.project_name":1,_id:0 }}
+]);
