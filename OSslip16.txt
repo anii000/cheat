@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <string.h>
+
+int main() {
+    DIR *d;
+    struct dirent *dir;
+    struct stat fileStat;
+    int month, fileMonth;
+
+    printf("Enter month number (1-12): ");
+    scanf("%d", &month);
+
+    d = opendir(".");   // Open current directory
+
+    if (d == NULL) {
+        perror("Unable to open directory");
+        return 1;
+    }
+
+    printf("\nFiles created in month %d:\n\n", month);
+
+    while ((dir = readdir(d)) != NULL) {
+
+        // Skip . and .. directories
+        if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
+            continue;
+
+        // Get file details
+        if (stat(dir->d_name, &fileStat) == 0) {
+
+            struct tm *timeinfo = localtime(&fileStat.st_mtime); // Modified/creation time
+            fileMonth = timeinfo->tm_mon + 1; // tm_mon starts from 0
+
+            if (fileMonth == month) {
+                printf("%s\n", dir->d_name);
+            }
+        }
+    }
+
+    closedir(d);
+    return 0;
+}
+---------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+
+// ------ Signal handlers for Child ------
+void sighup_handler(int sig) {
+    printf("\nChild: I have received SIGHUP signal\n");
+}
+
+void sigint_handler(int sig) {
+    printf("\nChild: I have received SIGINT signal\n");
+}
+
+void sigquit_handler(int sig) {
+    printf("\nChild: My DADDY has Killed me!!!\n");
+    exit(0);    // terminate child
+}
+
+int main() {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        printf("Fork Failed\n");
+        return 1;
+    }
+
+    if (pid == 0) {
+        // ----- CHILD PROCESS -----
+        signal(SIGHUP, sighup_handler);
+        signal(SIGINT, sigint_handler);
+        signal(SIGQUIT, sigquit_handler);
+
+        while(1) {
+            pause();   // wait for signals from parent
+        }
+    }
+    else {
+        // ----- PARENT PROCESS -----
+        for(int i = 0; i < 10; i++) {   // for 30 seconds (10 * 3 sec)
+            sleep(3);
+            if(i % 2 == 0)
+                kill(pid, SIGHUP);      // send SIGHUP
+            else
+                kill(pid, SIGINT);      // send SIGINT
+        }
+
+        sleep(1);
+        kill(pid, SIGQUIT); // After 30 sec send SIGQUIT
+        sleep(1);
+    }
+
+    return 0;
+}

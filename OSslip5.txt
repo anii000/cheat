@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <dirent.h>   // For directory handling
+
+int main() {
+    struct dirent *d;
+    DIR *dr = opendir(".");   // "." means current directory
+
+    if (dr == NULL) {
+        printf("Unable to open directory.\n");
+        return 0;
+    }
+
+    int count = 0;
+
+    printf("Files in Current Directory:\n\n");
+    
+    // Read directory entries
+    while ((d = readdir(dr)) != NULL) {
+        // Skip current(.) and parent(..) folder entries
+        if (d->d_type == DT_REG) {     // DT_REG means regular file
+            printf("%s\n", d->d_name);
+            count++;
+        }
+    }
+
+    closedir(dr);
+
+    printf("\nTotal Number of Files: %d\n", count);
+
+    return 0;
+}
+---------------------------------------------------------------------------
+#include <stdio.h>
+#include <unistd.h>   // For pipe(), fork(), read(), write()
+#include <string.h>   // For strlen()
+
+int main() {
+    int fd[2];                         // fd[0] → read end, fd[1] → write end
+    char buffer[100];
+    pid_t pid;
+
+    if (pipe(fd) == -1) {              // Create pipe
+        printf("Pipe creation failed\n");
+        return 1;
+    }
+
+    pid = fork();                      // Create child process
+
+    if (pid < 0) {
+        printf("Fork failed\n");
+        return 1;
+    }
+
+    if (pid == 0) {                    // Child Process
+        close(fd[0]);                  // Close reading end
+
+        char *msg1 = "Hello World";
+        char *msg2 = "Hello SPPU";
+        char *msg3 = "Linux is Funny";
+
+        write(fd[1], msg1, strlen(msg1)+1);
+        write(fd[1], msg2, strlen(msg2)+1);
+        write(fd[1], msg3, strlen(msg3)+1);
+
+        close(fd[1]);                  // Close write end after sending messages
+    } 
+    else {                             // Parent Process
+        close(fd[1]);                  // Close writing end
+
+        printf("\nParent received messages:\n");
+        while (read(fd[0], buffer, sizeof(buffer)) > 0) {
+            printf("%s\n", buffer);
+        }
+
+        close(fd[0]);                  // Close read end
+    }
+
+    return 0;
+}
